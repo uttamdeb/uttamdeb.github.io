@@ -1,4 +1,4 @@
-This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamdeb.github.io
+This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamdeb.com
 
 Release Changelog
 
