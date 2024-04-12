@@ -2,7 +2,11 @@ This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamde
 
 Release Changelog
 
-v1.4 (April 9, 2024)
+v0.4.1 (April 12, 2024)
+
+1. Moved to a custom domain and added CNAME
+
+v0.4.0 (April 9, 2024)
 
 1. Performance, Accessibility, SEO optimizations
 2. Gradient Hello in different languages
@@ -14,7 +18,7 @@ v1.4 (April 9, 2024)
 8. Removed intro area in achievements.html
 9. Added README
 
-v1.3 (April 8, 2024)
+v0.3.0 (April 8, 2024)
 
 1. Added typewriter effect for name.
 2. Changed background
@@ -23,15 +27,15 @@ v1.3 (April 8, 2024)
 5. Fixed phone number.
 6. Added copyright footer.
 
-v1.2 (April 7, 2024)
+v0.2.1 (April 7, 2024)
 
 1. Added tab icon
 2. Microsoft Clarity integration
 
-v1.1 (April 7, 2024)
+v0.2.0 (April 7, 2024)
 
 1. Added Google Analytics 4 integration
 2. Added a Text me form via Microsoft Forms
 3. Added a self picture.
 
-v1.0 Initial Release (April 7, 2024)
+v0.1.0 Initial Test Release (April 7, 2024)
