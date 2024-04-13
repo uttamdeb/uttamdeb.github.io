@@ -2,7 +2,10 @@ This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamde
 
 Release Changelog
 
-v0.4.2 (Apri; 13, 2024)
+v0.5.0 (April 13, 2024)
+1. Replaced Microsoft Forms integration with Formspree
+
+v0.4.2 (April 13, 2024)
 1. Added version footer
 
 v0.4.1 (April 12, 2024)
