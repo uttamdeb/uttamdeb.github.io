@@ -2,6 +2,11 @@ This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamde
 
 Release Changelog
 
+v0.6.0 (April 16, 2024)
+1. Added a new 'Experience' section
+2. Added remaining certificates
+3. Replaced the featured post in Articles.
+
 v0.5.1 (April 13, 2024)
 1. Bug fixes
 
