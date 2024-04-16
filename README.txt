@@ -2,6 +2,14 @@ This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamde
 
 Release Changelog
 
+v0.6.2 (April 17, 2024)
+1. Reduced Hello animation speed
+2. Fixed Arabic for Hello
+3. Footer updated
+
+v0.6.1 (April 17, 2024)
+1. Changed background
+
 v0.6.0 (April 16, 2024)
 1. Added a new 'Experience' section
 2. Added remaining certificates
