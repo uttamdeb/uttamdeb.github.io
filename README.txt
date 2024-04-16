@@ -2,6 +2,10 @@ This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamde
 
 Release Changelog
 
+v0.6.4 (April 17, 2024)
+1. Footer updated
+2. Background image optimized
+
 v0.6.3 (April 17, 2024)
 1. Changed tab picture
 
