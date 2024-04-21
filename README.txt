@@ -2,6 +2,14 @@ This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamde
 
 Release Changelog
 
+v0.7.0 (April 21, 2024)
+1. Updated latest Article link
+2. Added a new tab: Resumé
+3. Renamed Articles tab to: Projects & Articles
+4. Fixed meta description
+5. Deleted unwanted image assests.
+6. Removed .html from the links but this has broken the test server.
+
 v0.6.4 (April 17, 2024)
 1. Footer updated
 2. Background image optimized
