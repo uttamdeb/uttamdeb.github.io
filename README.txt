@@ -2,6 +2,10 @@ This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamde
 
 Release Changelog
 
+v1.0.0 Initial Public Release (April 22, 2024)
+1. Added a new tab: LinkedIn Posts with LinkedIn profile integration
+2. Spelling fixes
+
 v0.7.1 (April 21, 2024)
 1. Bug fixes
 
