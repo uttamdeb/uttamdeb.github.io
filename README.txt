@@ -2,6 +2,11 @@ This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamde
 
 Release Changelog
 
+v1.1.0 (September 17, 2024)
+1. Changed background image
+2. Updated resumé
+3. Deleted unwanted files
+
 v1.0.5 (May 7, 2024)
 1. Google Tag Manager integration
 
