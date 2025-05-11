@@ -2,6 +2,9 @@ This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamde
 
 Release Changelog
 
+v1.2.1 (May 11, 2025)
+1. New LinkedIn posts
+
 v1.2.0 (April 1, 2025)
 1. Experience section updated with more tasks
 2. Revamped resume with new minimal design
