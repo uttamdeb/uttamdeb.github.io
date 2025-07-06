@@ -2,6 +2,11 @@ This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamde
 
 Release Changelog
 
+
+v1.3.0 (July 6, 2025)
+1. Updated Experience: 10 Minute School
+2. New Experience: SheSTEM
+
 v1.2.2 (June 26, 2025)
 1. Updated resumé
 
