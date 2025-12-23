@@ -2,6 +2,13 @@ This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamde
 
 Release Changelog
 
+v2.1.1 (December 24, 2025)
+1. Fine-tuned active tab padding in navigation for better spacing (0.55rem 0.35rem)
+2. Fixed vertical alignment of social media icons in navigation using flexbox
+3. Adjusted navigation bottom margin for improved layout spacing
+4. Enhanced glass morphism effects on main content area, footer, and copyright section
+5. Improved text contrast with text shadows for better readability
+
 v2.1.0 (December 24, 2025)
 1. Major UI redesign with glassmorphism effects and rounded corners
 2. Added backdrop blur effects to navigation, buttons, boxes, forms, and tables

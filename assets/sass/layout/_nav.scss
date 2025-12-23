@@ -19,7 +19,7 @@
 		box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
 		height: 4rem;
 		line-height: 1;
-		margin: -4rem auto 0 auto;
+	margin: -4rem auto (_size(padding) * 2) auto;
 		overflow: hidden;
 		padding: 0 1.5rem 0 0.25rem;
 		position: relative;
@@ -78,13 +78,14 @@
 						-webkit-backdrop-filter: blur(10px);
 						border: 1px solid rgba(255, 255, 255, 0.3);
 						border-radius: _size(border-radius);
-						box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+						margin: 0.65rem 0.5rem;
+					padding: 0.55rem 0.35rem;					box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
-						a {
-							color: _palette(invert, fg);
-							font-weight: _font(weight-bold);
-							height: 100%;
-
+					a {
+						color: _palette(invert, fg);
+						font-weight: _font(weight-bold);
+						height: auto;
+						padding: 0 0.5rem;
 							&:hover {
 								color: _palette(invert, accent) !important;
 								background-color: transparent;
@@ -94,14 +95,16 @@
 				}
 			}
 
-			&.icons {
-				@include vendor('flex-grow', '0');
-				@include vendor('flex-shrink', '0');
-				margin-bottom: 0;
-			}
-		}
-
-		@include breakpoint('<=medium') {
-			display: none;
+&.icons {
+			@include vendor('display', 'flex');
+			@include vendor('align-items', 'center');
+			@include vendor('flex-grow', '0');
+			@include vendor('flex-shrink', '0');
+			margin-bottom: 0;
 		}
 	}
+
+	@include breakpoint('<=medium') {
+		display: none;
+	}
+}
