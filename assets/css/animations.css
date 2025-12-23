@@ -1,0 +1,99 @@
+/* Typewriter Effect */
+.typewriter h1 {
+	overflow: hidden;
+	border-right: .15em solid orange;
+	white-space: nowrap;
+	margin: 0 auto;
+	letter-spacing: .15em;
+	animation: typing 1.5s steps(40, end), blink-caret .75s step-end infinite;
+}
+
+@keyframes typing {
+	from { width: 0 }
+	to { width: 100% }
+}
+
+@keyframes blink-caret {
+	from, to { border-color: transparent }
+	50% { border-color: orange; }
+}
+
+/* Gradient Greeting Animation */
+.greeting {
+	font-family: 'Arial', sans-serif;
+	font-size: 5.3em;
+	font-weight: bold;
+	background: linear-gradient(90deg, #fc6e51 0%, #da4453 50%, #4a89dc 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-size: 200% 200%;
+	animation: gradientShift 2s linear infinite;
+}
+
+@keyframes gradientShift {
+	0%, 100% { background-position: 100% 50%; }
+	50% { background-position: 0% 50%; }
+}
+
+.greeting.fadeIn {
+	animation: fadeIn 1.5s ease-in-out, gradientShift 2s linear infinite;
+}
+
+.greeting.fadeOut {
+	animation: fadeOut 1.5s ease-in-out, gradientShift 2s linear infinite;
+}
+
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+	from { opacity: 1; }
+	to { opacity: 0; }
+}
+
+/* Image Gallery Styles */
+.gallery {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: 1rem;
+	margin: 2rem 0;
+}
+
+.gallery img {
+	width: 100%;
+	height: auto;
+	object-fit: cover;
+	border-radius: 4px;
+	transition: transform 0.3s ease;
+}
+
+.gallery img:hover {
+	transform: scale(1.02);
+}
+
+/* Intro Text Styles */
+.intro-text {
+	font-size: 16px;
+}
+
+/* Copyright Styles */
+#copyright {
+	color: grey;
+}
+
+#copyright a {
+	color: grey;
+}
+
+@media screen and (max-width: 736px) {
+	.greeting {
+		font-size: 3em;
+	}
+	
+	.gallery {
+		grid-template-columns: 1fr;
+	}
+}
