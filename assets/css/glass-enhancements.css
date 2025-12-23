@@ -1,0 +1,197 @@
+/* Glass Design UI Enhancements */
+
+:root {
+	--glass-bg: rgba(255, 255, 255, 0.05);
+	--glass-bg-hover: rgba(255, 255, 255, 0.08);
+	--glass-border: rgba(255, 255, 255, 0.18);
+	--glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+	--glass-shadow-lg: 0 12px 48px 0 rgba(0, 0, 0, 0.2);
+	--border-radius: 1rem;
+	--border-radius-lg: 1.5rem;
+	--blur-amount: 10px;
+	--transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced Glass Cards */
+.glass-effect {
+	background: var(--glass-bg);
+	backdrop-filter: blur(var(--blur-amount));
+	-webkit-backdrop-filter: blur(var(--blur-amount));
+	border: 1px solid var(--glass-border);
+	border-radius: var(--border-radius-lg);
+	box-shadow: var(--glass-shadow);
+	transition: var(--transition-smooth);
+}
+
+.glass-effect:hover {
+	background: var(--glass-bg-hover);
+	box-shadow: var(--glass-shadow-lg);
+	transform: translateY(-4px);
+}
+
+/* Smooth Scrolling */
+html {
+	scroll-behavior: smooth;
+}
+
+/* Enhanced Focus States */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+	outline: 2px solid rgba(24, 191, 239, 0.5);
+	outline-offset: 2px;
+	border-radius: 0.5rem;
+}
+
+/* Glass Card Variants */
+.glass-card-light {
+	background: rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: var(--border-radius-lg);
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+}
+
+.glass-card-dark {
+	background: rgba(0, 0, 0, 0.2);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: var(--border-radius-lg);
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Enhanced Input Focus States */
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+select:focus,
+textarea:focus {
+	background: rgba(255, 255, 255, 0.08);
+	border-color: rgba(24, 191, 239, 0.5);
+	box-shadow: 0 0 0 3px rgba(24, 191, 239, 0.1), 0 4px 16px rgba(0, 0, 0, 0.1);
+	transform: translateY(-1px);
+}
+
+/* Improved Link Styles */
+a {
+	transition: var(--transition-smooth);
+}
+
+/* Enhanced Section Spacing */
+section {
+	margin-bottom: 3rem;
+}
+
+/* Glass Panel for Content */
+.content-panel {
+	background: rgba(255, 255, 255, 0.03);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	border-radius: var(--border-radius-lg);
+	padding: 2rem;
+	margin: 2rem 0;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+	transition: var(--transition-smooth);
+}
+
+.content-panel:hover {
+	background: rgba(255, 255, 255, 0.05);
+	box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.15);
+}
+
+/* Frosted Glass Overlay */
+.frosted-overlay {
+	position: relative;
+	overflow: hidden;
+}
+
+.frosted-overlay::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(255, 255, 255, 0.05);
+	backdrop-filter: blur(15px);
+	-webkit-backdrop-filter: blur(15px);
+	z-index: -1;
+}
+
+/* Responsive Glass Effects */
+@media screen and (max-width: 736px) {
+	:root {
+		--border-radius-lg: 1rem;
+		--blur-amount: 8px;
+	}
+	
+	.content-panel {
+		padding: 1.5rem;
+	}
+}
+
+/* Print Styles */
+@media print {
+	.glass-effect,
+	.glass-card-light,
+	.glass-card-dark,
+	.content-panel {
+		background: white;
+		backdrop-filter: none;
+		-webkit-backdrop-filter: none;
+		border: 1px solid #ddd;
+		box-shadow: none;
+	}
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+	* {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+	
+	.glass-effect:hover,
+	.content-panel:hover,
+	.glass-card:hover {
+		transform: none;
+	}
+}
+
+/* Enhanced List Items with Glass Effect */
+ul.icons li a {
+	transition: var(--transition-smooth);
+}
+
+ul.icons li a:hover {
+	transform: translateY(-2px) scale(1.05);
+}
+
+/* Improved Table Styles */
+table {
+	border-radius: var(--border-radius);
+	overflow: hidden;
+}
+
+/* Enhanced Pagination */
+.pagination {
+	display: flex;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+}
+
+.pagination .page {
+	border-radius: var(--border-radius);
+	transition: var(--transition-smooth);
+}
+
+.pagination .page:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}

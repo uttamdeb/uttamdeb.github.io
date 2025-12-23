@@ -2,6 +2,19 @@ This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamde
 
 Release Changelog
 
+v2.1.0 (December 24, 2025)
+1. Major UI redesign with glassmorphism effects and rounded corners
+2. Added backdrop blur effects to navigation, buttons, boxes, forms, and tables
+3. Enhanced navigation with glass-themed active states and hover effects
+4. Improved component styling with rounded corners throughout (1rem - 1.5rem radius)
+5. Created new glass-enhancements.css with modern design variables
+6. Enhanced animations.css with glass shimmer effects and smooth transitions
+7. Fixed image aspect ratio preservation
+8. Added background element to all pages for consistent design
+9. Updated all SCSS components (nav, header, buttons, forms, images, tables)
+10. Improved accessibility with focus states and reduced motion support
+11. Enhanced hover animations with transform effects and shadows
+
 v2.0.0 (December 24, 2025)
 1. Major performance optimizations (lazy loading, resource hints, async scripts)
 2. Comprehensive SEO improvements (Open Graph, Twitter Cards, JSON-LD structured data, canonical URLs)
