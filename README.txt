@@ -1,6 +1,17 @@
-This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamdeb.com
+This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamdeb.github.io
 
 Release Changelog
+
+v2.0.0 (December 24, 2025)
+1. Major performance optimizations (lazy loading, resource hints, async scripts)
+2. Comprehensive SEO improvements (Open Graph, Twitter Cards, JSON-LD structured data, canonical URLs)
+3. Code quality improvements (moved inline CSS/JS to external files, eliminated 200+ lines of duplication)
+4. Created new asset files (animations.css, greeting.js)
+5. Fixed image aspect ratio preservation with CSS height: auto
+6. Added responsive iframe styling for LinkedIn embeds
+7. Updated copyright to 2026
+8. Updated sitemap.xml and robots.txt
+9. Updated domain references from uttamdeb.com to uttamdeb.github.io
 
 v1.4.0 (August 15, 2025)
 1. New LinkedIn posts
