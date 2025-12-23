@@ -4,13 +4,15 @@
 
 	.image {
 		border: 0;
-		border-radius: _size(border-radius);
+		border-radius: _size(border-radius-lg);
 		display: inline-block;
 		position: relative;
 
 		img {
-			border-radius: _size(border-radius);
+			border-radius: _size(border-radius-lg);
 			display: block;
+			width: 100%;
+			height: auto;
 		}
 
 		&.left,
@@ -19,6 +21,7 @@
 
 			img {
 				width: 100%;
+				height: auto;
 			}
 		}
 
@@ -45,6 +48,7 @@
 
 			img {
 				width: 100%;
+				height: auto;
 			}
 		}
 
@@ -59,6 +63,7 @@
 
 			img {
 				width: 100%;
+				height: auto;
 			}
 		}
 

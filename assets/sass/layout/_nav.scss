@@ -6,16 +6,22 @@
 		@include color-list(invert);
 		@include color-typography(invert);
 		@include vendor('display', 'flex');
+		@include vendor('align-items', 'center');
 		@include vendor('transition', (
 			'transform 1s ease',
 			'opacity 1s ease'
 		));
-		background: rgba(255,255,255,0.175);
+		background: rgba(255,255,255,0.08);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border: 1px solid rgba(255, 255, 255, 0.18);
+		border-radius: _size(border-radius-lg);
+		box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
 		height: 4rem;
-		line-height: 4rem;
+		line-height: 1;
 		margin: -4rem auto 0 auto;
 		overflow: hidden;
-		padding: 0 2rem 0 0;
+		padding: 0 1.5rem 0 0.25rem;
 		position: relative;
 		width: calc(100% - #{_size(padding) * 2});
 		max-width: _size(wrapper);
@@ -24,6 +30,7 @@
 		ul {
 			&.links {
 				@include vendor('display', 'flex');
+				@include vendor('align-items', 'center');
 				@include vendor('flex-grow', '1');
 				@include vendor('flex-shrink', '1');
 				font-family: _font(family-heading);
@@ -33,35 +40,54 @@
 				margin-bottom: 0;
 				padding-left: 0;
 				text-transform: uppercase;
+				height: 100%;
 
 				li {
-					display: block;
+					display: flex;
+					align-items: center;
 					padding-left: 0;
+					height: 100%;
+					margin: 0.5rem 0.25rem;
+					border: none;
+					background: transparent;
 
 					a {
 						@include vendor('transition', (
 							'background-color #{_duration(transition)} ease-in-out',
 							'color #{_duration(transition)} ease-in-out'
 						));
-						display: block;
+						display: flex;
+						align-items: center;
+						height: calc(100% - 1rem);
 						font-size: 0.8rem;
 						outline: none;
-						padding: 0 2rem;
+						padding: 0 1.5rem;
+						border: none;
+						text-decoration: none;
 
 						&:hover {
 							color: inherit !important;
-							background-color: transparentize(_palette(invert, fg), 0.9);
+							background: rgba(255, 255, 255, 0.12);
+							border-radius: _size(border-radius);
 						}
 					}
 
 					&.active {
-						background-color: _palette(invert, fg);
+						background: rgba(255, 255, 255, 0.2);
+						backdrop-filter: blur(10px);
+						-webkit-backdrop-filter: blur(10px);
+						border: 1px solid rgba(255, 255, 255, 0.3);
+						border-radius: _size(border-radius);
+						box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
 						a {
-							color: _palette(invert, bg);
+							color: _palette(invert, fg);
+							font-weight: _font(weight-bold);
+							height: 100%;
 
 							&:hover {
 								color: _palette(invert, accent) !important;
+								background-color: transparent;
 							}
 						}
 					}
