@@ -135,20 +135,13 @@
 			}
 
 			@include breakpoint('<=medium') {
-				@include fixed-grid-resize((
-					columns:			2,
-					gutters:			(_size(padding) * 2.5),
-					flush:				false
-				));
+				grid-template-columns: 1fr;
+				gap: _size(padding) * 1.5;
 			}
 
 			@include breakpoint('<=small') {
-				@include fixed-grid-resize((
-					columns:			1,
-					gutters:			(_size(padding) * 2),
-					prev-columns:		2,
-					flush:				false
-				));
+				grid-template-columns: 1fr;
+				gap: _size(padding);
 
 				> article {
 					&:nth-child(2n - 1) {
