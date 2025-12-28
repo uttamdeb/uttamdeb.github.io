@@ -71,12 +71,12 @@
 		@include vendor('transition', ('transform #{_duration(menu)} ease', 'box-shadow #{_duration(menu)} ease', 'visibility #{_duration(menu)}'));
 		display: none;
 		-webkit-overflow-scrolling: touch;
-		background: rgba(255, 255, 255, 0.95);
+		background: rgba(255, 255, 255, 0.1);
 		-webkit-backdrop-filter: blur(20px);
 		backdrop-filter: blur(20px);
 		border-left: 1px solid rgba(255, 255, 255, 0.3);
-		box-shadow: -4px 0 32px rgba(0, 0, 0, 0.15);
-		color: _palette(fg-bold);
+		box-shadow: -4px 0 32px rgba(0, 0, 0, 0.2);
+		color: #ffffff;
 		height: 100%;
 		max-width: 80%;
 		overflow-y: auto;
@@ -93,7 +93,7 @@
 			padding-left: 0;
 
 			li {
-				border-top: solid 2px _palette(border);
+				border-top: solid 2px rgba(255, 255, 255, 0.2);
 
 				a {
 					border-bottom: 0;
@@ -105,6 +105,7 @@
 					letter-spacing: 0.075em;
 					padding: 0.75rem 0;
 					text-transform: uppercase;
+					color: #ffffff;
 				}
 
 				&:first-child {
@@ -118,7 +119,7 @@
 			@include vendor('transition', 'color #{_duration(transition)} ease-in-out');
 			-webkit-tap-highlight-color: rgba(0,0,0,0);
 			border: 0;
-			color: _palette(fg-light);
+			color: rgba(255, 255, 255, 0.7);
 			cursor: pointer;
 			display: block;
 			height: 3.25rem;
@@ -137,7 +138,7 @@
 			}
 
 			&:hover {
-				color: _palette(fg-bold);
+				color: #18bfef;
 			}
 
 			@include breakpoint('<=small') {
