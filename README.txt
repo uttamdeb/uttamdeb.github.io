@@ -2,6 +2,17 @@ This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamde
 
 Release Changelog
 
+v2.1.2 (December 28, 2025)
+1. Fixed mobile layout issues with responsive design improvements
+2. Reduced header font size on mobile (3.25rem → 2.5rem) with word-break for overflow prevention
+3. Changed articles grid to single column layout on mobile and tablet breakpoints
+4. Added glassmorphism effects to mobile menu button (#navPanelToggle)
+5. Enhanced navigation panel with glass UI (backdrop-filter blur, transparent background)
+6. Fixed header text overflow on small screens with proper text wrapping
+7. Ensured articles stack vertically on mobile devices (≤980px)
+8. Applied consistent glass design to all mobile navigation elements
+9. Updated navigation panel text colors to white for optimal readability on glass background
+
 v2.1.1 (December 24, 2025)
 1. Fine-tuned active tab padding in navigation for better spacing (0.55rem 0.35rem)
 2. Fixed vertical alignment of social media icons in navigation using flexbox
