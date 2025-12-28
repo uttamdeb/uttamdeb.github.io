@@ -94,9 +94,11 @@
 			min-height: 80vh;
 
 			h1 {
-				font-size: 3.25rem;
+				font-size: 2.5rem;
 				line-height: 1.1;
 				margin-bottom: _size(element-margin) * 0.5;
+				word-break: break-word;
+				overflow-wrap: break-word;
 			}
 
 			p {
