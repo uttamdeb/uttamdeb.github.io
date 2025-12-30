@@ -2,6 +2,26 @@ This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamde
 
 Release Changelog
 
+v2.2.0 (December 31, 2025) - Major Performance & Scaling Optimizations
+1. Fixed large display scaling issue - content now caps at 1440px (90rem) with centered layout
+2. Implemented responsive font sizing using clamp() for optimal readability across all screen sizes
+3. Optimized intro heading: now scales from 2.5rem to 5rem based on viewport (prevents oversizing)
+4. Optimized gradient greeting animation: reduced from 5.3em to responsive clamp() sizing
+5. Added wrapper-max constraint (90rem/1440px) to prevent excessive content width on ultra-wide displays
+6. All main containers (wrapper, main, nav, footer) now use min(wrapper-max, 90vw) for consistent sizing
+7. Enhanced animation performance: added will-change and GPU acceleration (translateZ(0)) to all animated elements
+8. Cleaned up duplicate code: removed empty comment blocks and consolidated glass effect definitions
+9. Optimized header logo sizing: responsive clamp(1.75rem, 2vw + 0.5rem, 2.25rem) with 90% max-width
+10. Added large display breakpoint optimization (>xlarge) to cap padding and prevent excessive spacing
+11. Improved gallery responsiveness: now uses min(300px, 100%) for better mobile adaptation
+12. Performance boost: all hover effects now use GPU-accelerated transforms
+13. Added CSS custom properties for max-content-width and viewport-safe-width in glass-enhancements.css
+14. Optimized typewriter effect with will-change and max-width constraints
+15. Enhanced articles grid with will-change properties for smoother hover transitions
+16. Navigation panel toggle button optimized with GPU acceleration for smoother animations
+17. All content sections now properly center with background visible on sides for ultra-wide displays
+18. Improved padding system: consistent spacing across all screen sizes with large display caps
+
 v2.1.2 (December 28, 2025)
 1. Fixed mobile layout issues with responsive design improvements
 2. Reduced header font size on mobile (3.25rem → 2.5rem) with word-break for overflow prevention

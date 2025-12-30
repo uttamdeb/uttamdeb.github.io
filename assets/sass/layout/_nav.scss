@@ -24,7 +24,7 @@
 		padding: 0 1.5rem 0 0.25rem;
 		position: relative;
 		width: calc(100% - #{_size(padding) * 2});
-		max-width: _size(wrapper);
+		max-width: min(_size(wrapper-max), 90vw);
 		z-index: 2;
 
 		ul {

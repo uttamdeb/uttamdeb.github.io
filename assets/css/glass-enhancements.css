@@ -10,6 +10,8 @@
 	--border-radius-lg: 1.5rem;
 	--blur-amount: 10px;
 	--transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	--max-content-width: 90rem;
+	--viewport-safe-width: 90vw;
 }
 
 /* Enhanced Glass Cards */
@@ -21,12 +23,14 @@
 	border-radius: var(--border-radius-lg);
 	box-shadow: var(--glass-shadow);
 	transition: var(--transition-smooth);
+	will-change: transform, box-shadow;
+	transform: translateZ(0);
 }
 
 .glass-effect:hover {
 	background: var(--glass-bg-hover);
 	box-shadow: var(--glass-shadow-lg);
-	transform: translateY(-4px);
+	transform: translateY(-4px) translateZ(0);
 }
 
 /* Smooth Scrolling */
