@@ -29,6 +29,8 @@
 		border: 1px solid rgba(255, 255, 255, 0.2);
 		border-radius: 0.5rem;
 		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+		will-change: transform;
+		transform: translateZ(0);
 
 		&:before {
 			content: '\f0c9';
@@ -37,7 +39,7 @@
 
 		&:hover {
 			background: rgba(255, 255, 255, 0.15);
-			transform: translateY(-2px);
+			transform: translateY(-2px) translateZ(0);
 			box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 		}
 

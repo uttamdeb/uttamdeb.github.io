@@ -6,6 +6,9 @@
 	margin: 0 auto;
 	letter-spacing: .15em;
 	animation: typing 1.5s steps(40, end), blink-caret .75s step-end infinite;
+	will-change: width, border-color;
+	transform: translateZ(0);
+	max-width: 90rem;
 }
 
 @keyframes typing {
@@ -21,7 +24,7 @@
 /* Gradient Greeting Animation */
 .greeting {
 	font-family: 'Arial', sans-serif;
-	font-size: 5.3em;
+	font-size: clamp(2.5rem, 5vw + 1rem, 5rem);
 	font-weight: bold;
 	background: linear-gradient(90deg, #fc6e51 0%, #da4453 50%, #4a89dc 100%);
 	-webkit-background-clip: text;
@@ -29,6 +32,11 @@
 	-webkit-text-fill-color: transparent;
 	background-size: 200% 200%;
 	animation: gradientShift 2s linear infinite;
+	will-change: background-position;
+	transform: translateZ(0);
+	max-width: 90rem;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 @keyframes gradientShift {
@@ -57,9 +65,10 @@
 /* Image Gallery Styles */
 .gallery {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
 	gap: 1rem;
-	margin: 2rem 0;
+	margin: 2rem auto;
+	max-width: min(90rem, 100%);
 }
 
 .gallery img {
@@ -68,10 +77,11 @@
 	border-radius: 1.5rem;
 	transition: transform 0.3s ease, box-shadow 0.3s ease;
 	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+	will-change: transform;
 }
 
 .gallery img:hover {
-	transform: scale(1.02) translateY(-4px);
+	transform: scale(1.02) translateY(-4px) translateZ(0);
 	box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.2);
 }
 

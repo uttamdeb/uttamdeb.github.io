@@ -31,7 +31,7 @@
 			border-width: 3px !important;
 			border-radius: _size(border-radius-lg);
 			font-family: _font(family-heading);
-			font-size: 2.25rem;
+			font-size: clamp(1.75rem, 2vw + 0.5rem, 2.25rem);
 			font-weight: _font(weight-heading);
 			letter-spacing: 0.075em;
 			line-height: 1;
@@ -42,13 +42,17 @@
 			backdrop-filter: blur(10px);
 			-webkit-backdrop-filter: blur(10px);
 			box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+			will-change: transform;
+			transform: translateZ(0);
+			max-width: 90%;
+			margin: 0 auto;
 
 			&:hover {
 				border-color: _palette(invert, accent) !important;
 				color: _palette(invert, accent) !important;
 				background: rgba(255, 255, 255, 0.1);
 				box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.3);
-				transform: translateY(-4px);
+				transform: translateY(-4px) translateZ(0);
 			}
 		}
 

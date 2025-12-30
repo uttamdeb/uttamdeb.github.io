@@ -12,7 +12,7 @@
 		position: relative;
 		margin: 0 auto;
 		width: calc(100% - #{_size(padding) * 2});
-		max-width: _size(wrapper);
+		max-width: min(_size(wrapper-max), 90vw);
 		z-index: 2;
 		transition: all 0.3s ease;
 		
@@ -103,6 +103,8 @@
 				text-align: center;
 				padding: _size(padding) * 1.25;
 				transition: all 0.3s ease;
+				will-change: transform, box-shadow;
+				transform: translateZ(0);
 				
 				// Better text contrast for articles
 				h1, h2, h3, h4, h5, h6 {
@@ -117,20 +119,12 @@
 				
 				&:hover {
 					background: rgba(255, 255, 255, 0.12);
-					transform: translateY(-2px);
+					transform: translateY(-2px) translateZ(0);
 					box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.18);
 				}
 
 				> :last-child {
 					margin-bottom: 0;
-				}
-
-				&:nth-child(2n - 1) {
-					// All articles have glass borders now
-				}
-
-				&:nth-child(-n + 2) {
-					// All articles have glass borders now
 				}
 			}
 
@@ -144,22 +138,6 @@
 				gap: _size(padding);
 
 				> article {
-					&:nth-child(2n - 1) {
-						// All articles have glass borders now
-					}
-
-					&:nth-child(-n + 2) {
-						// All articles have glass borders now
-					}
-
-					&:nth-child(n) {
-						// All articles have glass borders now
-					}
-
-					&:nth-child(-n + 1) {
-						// All articles have glass borders now
-					}
-
 					.image {
 						max-width: 25rem;
 						margin-left: auto;
