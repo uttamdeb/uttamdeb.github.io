@@ -2,6 +2,22 @@ This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamde
 
 Release Changelog
 
+v2.3.0 (December 31, 2025)
+1. Integrated Google Gemini AI chat feature across all pages (index, achievements, experience, resumé, linkedin-feed)
+2. Implemented streaming responses for real-time AI conversation experience
+3. Created glass morphism chat UI matching site aesthetic with responsive design
+4. Desktop: Chat popup appears from bottom-right corner (420×600px) with hover tooltip
+5. Mobile: Full-screen bottom sheet style chat (100% width × 85vh)
+6. Added system prompt configuration (/assets/config/system-prompt.txt) for easy customization
+7. Created Gemini API client (/assets/js/gemini-client.js) with conversation history management
+8. Implemented chat UI controller (/assets/js/chat-ui.js) with animations and error handling
+9. Styled chat interface (/assets/css/chat.css) with glassmorphism effects, smooth animations
+10. Features: Typing indicators, streaming text display, ESC/Enter keyboard shortcuts, auto-scrolling
+11. Responsive breakpoints: Mobile (≤736px), Tablet (737-980px), Desktop (>980px)
+12. Safety settings: BLOCK_MEDIUM_AND_ABOVE for harassment, hate speech, explicit, dangerous content
+13. Chat icon: tenten-icon.png, uses site fonts (Merriweather body, Source Sans Pro headings)
+14. Icons: FontAwesome for close and send buttons
+
 v2.2.0 (December 31, 2025) - Major Performance & Scaling Optimizations
 1. Fixed large display scaling issue - content now caps at 1440px (90rem) with centered layout
 2. Implemented responsive font sizing using clamp() for optimal readability across all screen sizes
