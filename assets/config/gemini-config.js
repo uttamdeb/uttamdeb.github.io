@@ -73,7 +73,7 @@ const GeminiConfig = {
         const key = this.getApiKey();
         if (!key) {
             // Set the key on first load (this should be done securely)
-            const encodedKey = 'AIzaSyDX-uVhzQnRa0kM6Y9qG7Ul7QsMu-Ru7yM';
+            const encodedKey = 'AIzaSyAIMk_ghkY5AnmkijKnBEPrkMLRQIp-UVs';
             this.setApiKey(atob(encodedKey));
         }
     }
