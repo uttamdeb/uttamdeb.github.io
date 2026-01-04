@@ -21,6 +21,12 @@ class ChatUI {
      * Initialize the chat UI
      */
     initialize() {
+        // Check if chat is enabled in config
+        if (typeof GeminiConfig !== 'undefined' && GeminiConfig.enabled === false) {
+            console.log('💤 Chat is disabled in configuration');
+            return;
+        }
+        
         this.createChatHTML();
         this.cacheElements();
         this.attachEventListeners();
