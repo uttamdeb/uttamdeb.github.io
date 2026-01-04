@@ -13,6 +13,13 @@
  */
 
 const GeminiConfig = {
+    // ============================================
+    // ENABLE/DISABLE CHATBOT
+    // Set to false to completely disable the chat feature
+    // Set to true to enable it
+    // ============================================
+    enabled: false,
+    
     // Model configuration
     model: 'gemini-2.5-flash',
     
@@ -73,7 +80,7 @@ const GeminiConfig = {
         const key = this.getApiKey();
         if (!key) {
             // Set the key on first load (this should be done securely)
-            const encodedKey = 'AIzaSyAIMk_ghkY5AnmkijKnBEPrkMLRQIp-UVs';
+            const encodedKey = '';
             this.setApiKey(atob(encodedKey));
         }
     }

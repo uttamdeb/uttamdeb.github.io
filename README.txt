@@ -2,6 +2,9 @@ This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamde
 
 Release Changelog
 
+v2.3.1 (January 4, 2026)
+1. Added enabled flag in config to easily disable/enable chatbot
+
 v2.3.0 (December 31, 2025)
 1. Integrated Google Gemini AI chat feature across all pages (index, achievements, experience, resumé, linkedin-feed)
 2. Implemented streaming responses for real-time AI conversation experience
@@ -17,6 +20,14 @@ v2.3.0 (December 31, 2025)
 12. Safety settings: BLOCK_MEDIUM_AND_ABOVE for harassment, hate speech, explicit, dangerous content
 13. Chat icon: tenten-icon.png, uses site fonts (Merriweather body, Source Sans Pro headings)
 14. Icons: FontAwesome for close and send buttons
+15. Added markdown support with marked.js for rich text formatting in chat responses
+16. Integrated KaTeX for mathematical equation rendering (supports $$, $, \(\), \[\] delimiters)
+17. Added syntax highlighting with highlight.js (Atom One Dark theme) for code blocks
+18. **SECURITY FIX**: Implemented Cloudflare Pages Functions proxy to protect API key
+19. Created serverless function (/functions/api/gemini.js) to handle secure API communication
+20. API key now stored as environment variable (server-side only, never exposed to client)
+21. Client updated to support proxy mode with SSE streaming through secure endpoint
+22. See CLOUDFLARE_DEPLOYMENT.md for deployment instructions and security best practices
 
 v2.2.0 (December 31, 2025) - Major Performance & Scaling Optimizations
 1. Fixed large display scaling issue - content now caps at 1440px (90rem) with centered layout
