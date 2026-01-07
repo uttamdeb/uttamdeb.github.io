@@ -3,6 +3,7 @@ This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamde
 Release Changelog
 
 v2.3.1 (January 4, 2026)
+
 1. Added enabled flag in config to easily disable/enable chatbot
 
 v2.3.0 (December 31, 2025)
