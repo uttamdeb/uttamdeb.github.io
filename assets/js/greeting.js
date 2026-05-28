@@ -1,24 +1,35 @@
-// Gradient Greetings Animation
-document.addEventListener('DOMContentLoaded', function() {
-	const greetings = ['Hello', 'হ্যালো', 'नमस्ते', 'مرحبًا', '你好', '¡Hola', 'Olá'];
-	let currentGreeting = 0;
-	const greetingElement = document.getElementById('greeting');
-	
-	if (!greetingElement) return;
+(function () {
+	var greetings = ['Hello', 'হ্যালো', 'नमस्ते', 'مرحبًا', '你好', '¡Hola!', 'Olá'];
+	var currentIndex = 0;
+	var greetingElement = null;
+	var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-	function changeGreeting() {
-		greetingElement.classList.remove('fadeIn');
-		greetingElement.classList.add('fadeOut');
+	function setGreeting(text) {
+		greetingElement.textContent = text;
 	}
 
-	greetingElement.addEventListener('animationend', function(event) {
-		if (event.animationName === 'fadeOut') {
-			currentGreeting = (currentGreeting + 1) % greetings.length;
-			greetingElement.textContent = greetings[currentGreeting];
-			greetingElement.classList.remove('fadeOut');
-			greetingElement.classList.add('fadeIn');
-		}
-	});
+	function changeGreeting() {
+		greetingElement.classList.remove('is-entering');
+		greetingElement.classList.add('is-leaving');
 
-	setInterval(changeGreeting, 3000); // Change every 3 seconds
-});
+		window.setTimeout(function () {
+			currentIndex = (currentIndex + 1) % greetings.length;
+			setGreeting(greetings[currentIndex]);
+			greetingElement.classList.remove('is-leaving');
+			// force reflow so the next animation restarts cleanly
+			void greetingElement.offsetWidth;
+			greetingElement.classList.add('is-entering');
+		}, 460);
+	}
+
+	document.addEventListener('DOMContentLoaded', function () {
+		greetingElement = document.getElementById('greeting');
+		if (!greetingElement) return;
+
+		setGreeting(greetings[currentIndex]);
+		greetingElement.classList.add('is-entering');
+
+		if (reducedMotion) return;
+		window.setInterval(changeGreeting, 3400);
+	});
+})();

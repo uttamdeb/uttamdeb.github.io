@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /assets/sass/
 
-Sitemap: https://uttamdeb.github.io/sitemap.xml
+Sitemap: https://uttamdeb.com/sitemap.xml
