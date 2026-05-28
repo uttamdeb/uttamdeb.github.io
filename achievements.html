@@ -29,26 +29,35 @@
 		
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script>
+			(function () {
+				try {
+					document.documentElement.setAttribute('data-theme', localStorage.getItem('uttam-theme') || 'dark');
+				} catch (error) {
+					document.documentElement.setAttribute('data-theme', 'dark');
+				}
+			})();
+		</script>
 		<title>Uttam Deb - Achievements & Certifications | Data Analytics & Machine Learning</title>
 		<meta name="description" content="Explore Uttam Deb's professional achievements including Google BI Certification, DataCamp credentials, Machine Learning certifications, and AI hackathon concepts in data analytics and business intelligence.">
 		<meta name="author" content="Uttam Deb">
 		<meta name="keywords" content="Uttam Deb achievements, Google BI certification, DataCamp SQL, Machine Learning Python, Power BI certification, AI hackathon, data analytics certifications">
 		
 		<!-- Canonical URL -->
-		<link rel="canonical" href="https://uttamdeb.github.io/achievements">
+		<link rel="canonical" href="https://uttamdeb.com/achievements">
 		
 		<!-- Open Graph Meta Tags -->
 		<meta property="og:title" content="Uttam Deb - Professional Achievements & Certifications">
 		<meta property="og:description" content="Professional certifications and achievements in Data Analytics, Business Intelligence, Machine Learning, and AI innovation.">
 		<meta property="og:type" content="website">
-		<meta property="og:url" content="https://uttamdeb.github.io/achievements">
-		<meta property="og:image" content="https://uttamdeb.github.io/images/adaptive_and_smart_learning_assistant_ai_hackathon.webp">
+		<meta property="og:url" content="https://uttamdeb.com/achievements">
+		<meta property="og:image" content="https://uttamdeb.com/images/adaptive_and_smart_learning_assistant_ai_hackathon.webp">
 		
 		<!-- Twitter Card Meta Tags -->
 		<meta name="twitter:card" content="summary_large_image">
 		<meta name="twitter:title" content="Uttam Deb - Professional Achievements & Certifications">
 		<meta name="twitter:description" content="Professional certifications and achievements in Data Analytics, Business Intelligence, and Machine Learning.">
-		<meta name="twitter:image" content="https://uttamdeb.github.io/images/adaptive_and_smart_learning_assistant_ai_hackathon.webp">
+		<meta name="twitter:image" content="https://uttamdeb.com/images/adaptive_and_smart_learning_assistant_ai_hackathon.webp">
 		
 		<!-- Resource Hints -->
 		<link rel="preconnect" href="https://www.googletagmanager.com">
@@ -67,10 +76,12 @@
 		<link rel="stylesheet" href="assets/css/animations.css" />
 		<link rel="stylesheet" href="assets/css/glass-enhancements.css" />
 		<link rel="stylesheet" href="assets/css/chat.css" />
+		<link rel="stylesheet" href="assets/css/design-tokens.css" />
+		<link rel="stylesheet" href="assets/css/design-v2.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 	</head>
 
-	<body class="is-preload">
+	<body class="is-preload design-v2 page-content page-achievements">
 
 		<!-- Wrapper -->
 		<div id="wrapper">
@@ -80,24 +91,27 @@
 
 				<!-- Header -->
 					<header id="header">
-						<a href="index" class="logo">Uttam Deb</a>
+						<a href="/" class="logo">Uttam Deb</a>
 					</header>
 
 				<!-- Nav -->
-				<nav id="nav">
+				<nav id="nav" aria-label="Primary navigation" data-glass>
 					<ul class="links">
-						<li><a href="/">Projects & Articles</a></li>
+						<li><a href="/">Home</a></li>
+						<li class="nav-feature"><a href="tenten"><span class="nav-feature-orb" aria-hidden="true"></span>TenTen</a></li>
+						<li><a href="work">Work</a></li>
 						<li><a href="experience">Experience</a></li>
 						<li class="active"><a href="achievements">Achievements</a></li>
 						<li><a href="resumé">Resumé</a></li>
-						<li><a href="linkedin-feed">LinkedIn Feed</a></li>
-						<!-- <li><a href="elements.html">Elements Reference</a></li> -->
+						<li><a href="linkedin-feed">LinkedIn</a></li>
 						</ul>
 						<ul class="icons">
+							<li><button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false" aria-label="Toggle theme" title="Toggle theme"><svg class="theme-toggle-icon theme-toggle-icon--moon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M20.5 14.4A8.5 8.5 0 0 1 9.6 3.5a.6.6 0 0 0-.84-.7 10 10 0 1 0 12.43 12.43.6.6 0 0 0-.7-.83Z" fill="currentColor"/></svg><svg class="theme-toggle-icon theme-toggle-icon--sun" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4" fill="currentColor"/><g stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 3v2.2"/><path d="M12 18.8V21"/><path d="M3 12h2.2"/><path d="M18.8 12H21"/><path d="m5.6 5.6 1.55 1.55"/><path d="m16.85 16.85 1.55 1.55"/><path d="m5.6 18.4 1.55-1.55"/><path d="m16.85 7.15 1.55-1.55"/></g></svg><span class="theme-toggle-srlabel" data-theme-label>Dark</span></button></li>
 							<li><a href="https://www.facebook.com/uttam.deb.7771/" class="icon brands alt fa-facebook-f" aria-label="Visit Facebook Profile"><span class="label">Facebook</span></a></li>
 							<li><a href="https://www.instagram.com/uttamdeb/" class="icon brands alt fa-instagram" aria-label="Visit Instagram Profile"><span class="label">Instagram</span></a></li>
 							<li><a href="https://www.github.com/uttamdeb" class="icon brands alt fa-github" aria-label="Visit GitHub Profile"><span class="label">GitHub</span></a></li>
 							<li><a href="https://www.linkedin.com/in/uttam-deb/" class="icon brands alt fa-linkedin" aria-label="Visit LinkedIn Profile"><span class="label">LinkedIn</span></a></li>
+							<li><a href="https://x.com/UttamDebJ" class="icon brands alt social-x" aria-label="Visit X Profile"><span class="label">X</span></a></li>
 						</ul>
 					</nav>
 
@@ -292,11 +306,11 @@
 							<section>
 								<h3>Social</h3>
 								<ul class="icons alt">
-									<!-- <li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li> -->
 									<li><a href="https://www.facebook.com/uttam.deb.7771/" class="icon brands alt fa-facebook-f" aria-label="Visit Facebook Profile"><span class="label">Facebook</span></a></li>
 									<li><a href="https://www.instagram.com/uttamdeb/" class="icon brands alt fa-instagram" aria-label="Visit Instagram Profile"><span class="label">Instagram</span></a></li>
 									<li><a href="https://www.github.com/uttamdeb" class="icon brands alt fa-github" aria-label="Visit GitHub Profile"><span class="label">GitHub</span></a></li>
 									<li><a href="https://www.linkedin.com/in/uttam-deb/" class="icon brands alt fa-linkedin" aria-label="Visit LinkedIn Profile"><span class="label">LinkedIn</span></a></li>
+									<li><a href="https://x.com/UttamDebJ" class="icon brands alt social-x" aria-label="Visit X Profile"><span class="label">X</span></a></li>
 								</ul>
 							</section>
 						</section>
@@ -306,7 +320,7 @@
 				<div id="copyright">
 					<ul>
 					  <li><b>© 2026 Uttam Deb</b></li>
-					  <li><b>v2.3.1</b></li>
+					  <li><b>v3.0.0</b></li>
 					  <li><b>Hosted in: <a href="https://github.com"><b>GitHub</b></a></b></li>
 					</ul>
 				  </div>
@@ -324,6 +338,9 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+			<script src="assets/js/theme-toggle.js"></script>
+			<script src="assets/js/glass-interactions.js"></script>
+			<script src="assets/js/storytelling.js"></script>
 			
 			<!-- Markdown and Math Libraries for Chat -->
 			<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">

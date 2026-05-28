@@ -120,6 +120,7 @@
 		$wrapper._parallax(0.925);
 
 	// Nav Panel.
+	if (!$body.hasClass('design-v2')) {
 
 		// Toggle.
 			$navPanelToggle = $(
@@ -191,6 +192,8 @@
 				&&	browser.osVersion < 10)
 					$navPanel
 						.css('transition', 'none');
+
+	}
 
 	// Intro.
 		var $intro = $('#intro');

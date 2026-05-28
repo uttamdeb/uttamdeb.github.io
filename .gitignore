@@ -1,0 +1,12 @@
+# macOS Finder metadata
+.DS_Store
+**/.DS_Store
+
+# Local Playwright / browser automation artifacts
+.playwright-cli/
+playwright-report/
+test-results/
+blob-report/
+output/playwright/
+*.trace.zip
+*.har

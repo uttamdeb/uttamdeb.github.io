@@ -2,6 +2,29 @@ This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamde
 
 Release Changelog
 
+v3.0.0 (May 28, 2026)
+1. Full portfolio design overhaul with a dark-default editorial storytelling homepage.
+2. Added `assets/css/design-tokens.css` and `assets/css/design-v2.css` as a reversible redesign layer over the legacy theme.
+3. Added light mode with persistent theme toggle across redesigned public pages.
+4. Added interactive glass response through `assets/js/glass-interactions.js`.
+5. Added scroll reveal/story behavior through `assets/js/storytelling.js`.
+6. Moved the old homepage project/article archive into `work.html` while keeping content reachable.
+7. Preserved the multilingual greeting behavior in a redesigned hero greeting pill.
+8. Added `legacy-home.html` as a rollback snapshot for the pre-overhaul homepage.
+9. Updated `robots.txt` and `sitemap.xml` for the new work archive path.
+10. Fixed v3 alignment drift caused by legacy root font scaling on wide screens.
+11. Restored homepage section padding with more specific design-v2 rules so story sections no longer collide.
+12. Made the primary navigation smaller and sticky by overriding the legacy wrapper overflow.
+13. Improved mobile navigation persistence and spacing with a compact theme toggle and horizontal link rail.
+14. Fixed light mode contrast for headings, body copy, greeting text, stat text, and copyright text.
+15. Updated homepage and metadata copy to the current role: Assistant Manager of Business Intelligence and Specialist AI Systems Developer.
+16. Reworked first-person homepage copy and removed outdated Senior BI wording from the legacy snapshot.
+17. Fixed image sizing by neutralizing HTML height attributes in the v2 layer and containing odd-ratio thumbnails.
+18. Added a signal-section visual and tightened story section spacing for a clearer landing-page narrative.
+19. Added X social links alongside GitHub, LinkedIn, Facebook, and Instagram across the redesigned pages.
+20. Added an optional "Explore serenity" Nepal photo-booth section between the contact panel and final footer.
+21. Added a dedicated `tenten.html` product and engineering story page, with a glowing TenTen nav entry and supporting TenTen visuals.
+
 v2.3.1 (January 4, 2026)
 
 1. Added enabled flag in config to easily disable/enable chatbot

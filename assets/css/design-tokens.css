@@ -1,0 +1,63 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500;6..72,600&family=Red+Hat+Mono:wght@400;500;600&display=swap");
+
+:root {
+	color-scheme: dark;
+	--font-display: "Newsreader", Georgia, serif;
+	--font-italic: "Instrument Serif", Georgia, serif;
+	--font-body: "Inter", "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+	--font-mono: "Red Hat Mono", "SFMono-Regular", Consolas, monospace;
+	--bg: #050607;
+	--bg-soft: #090b0f;
+	--bg-elevated: #0d1016;
+	--surface: rgba(255, 255, 255, 0.07);
+	--surface-strong: rgba(255, 255, 255, 0.12);
+	--surface-solid: rgba(15, 18, 24, 0.92);
+	--text: #f4f0e8;
+	--text-muted: rgba(244, 240, 232, 0.68);
+	--text-subtle: rgba(244, 240, 232, 0.48);
+	--line: rgba(255, 255, 255, 0.16);
+	--line-strong: rgba(255, 255, 255, 0.28);
+	--accent: #8ab4ff;
+	--accent-2: #7ee7c8;
+	--warm: #d7b98c;
+	--danger: #ff6f61;
+	--shadow-soft: 0 18px 60px rgba(0, 0, 0, 0.24);
+	--shadow-strong: 0 30px 90px rgba(0, 0, 0, 0.42);
+	--radius-xs: 0.5rem;
+	--radius-sm: 0.75rem;
+	--radius-md: 1rem;
+	--radius-lg: 1.35rem;
+	--radius-xl: 2rem;
+	--max: 1220px;
+	--page-pad: clamp(1rem, 4vw, 3rem);
+	--nav-height: 4.75rem;
+	--ease: cubic-bezier(0.23, 1, 0.32, 1);
+	--ease-fast: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+:root[data-theme="light"] {
+	color-scheme: light;
+	--bg: #f7f4ed;
+	--bg-soft: #efeae0;
+	--bg-elevated: #fffdf7;
+	--surface: rgba(255, 255, 255, 0.66);
+	--surface-strong: rgba(255, 255, 255, 0.86);
+	--surface-solid: rgba(255, 253, 247, 0.94);
+	--text: #171717;
+	--text-muted: rgba(23, 23, 23, 0.66);
+	--text-subtle: rgba(23, 23, 23, 0.48);
+	--line: rgba(23, 23, 23, 0.14);
+	--line-strong: rgba(23, 23, 23, 0.22);
+	--accent: #245bdb;
+	--accent-2: #147d64;
+	--warm: #9b6b2f;
+	--danger: #b44737;
+	--shadow-soft: 0 18px 60px rgba(64, 48, 32, 0.12);
+	--shadow-strong: 0 30px 90px rgba(64, 48, 32, 0.18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:root {
+		scroll-behavior: auto;
+	}
+}
