@@ -1,8 +1,14 @@
-This is my personal portfoilo website. Hosted in GitHub. Current Domain: uttamdeb.github.io
+This is my personal portfolio website. Hosted on GitHub. Current Domain: uttamdeb.github.io
 
 Release Changelog
 
-v3.0.0 (May 28, 2026)
+v3.1.0 (May 28, 2026)
+1. Added a new page: Origin Labs
+2. Enhanced TenTen page
+3. Added more photos in serenity photo booth.
+4. Visual improvements
+
+v3.0.0 (May 26, 2026)
 1. Full portfolio design overhaul with a dark-default editorial storytelling homepage.
 2. Added `assets/css/design-tokens.css` and `assets/css/design-v2.css` as a reversible redesign layer over the legacy theme.
 3. Added light mode with persistent theme toggle across redesigned public pages.
@@ -22,7 +28,7 @@ v3.0.0 (May 28, 2026)
 17. Fixed image sizing by neutralizing HTML height attributes in the v2 layer and containing odd-ratio thumbnails.
 18. Added a signal-section visual and tightened story section spacing for a clearer landing-page narrative.
 19. Added X social links alongside GitHub, LinkedIn, Facebook, and Instagram across the redesigned pages.
-20. Added an optional "Explore serenity" Nepal photo-booth section between the contact panel and final footer.
+20. Added an optional "Explore serenity" photo-booth section between the contact panel and final footer.
 21. Added a dedicated `tenten.html` product and engineering story page, with a glowing TenTen nav entry and supporting TenTen visuals.
 
 v2.3.1 (January 4, 2026)
