@@ -650,6 +650,12 @@ These notes capture alignment and browser issues found during the v3 implementat
 - Treat the whole redesign QA pass as `v3.0.0` in public footers and `README.txt` unless a separate release is explicitly created.
 - The current greeting script uses `is-entering` and `is-leaving`; keep matching CSS animation states so multilingual greetings visibly rotate.
 - The homepage includes an optional `Explore serenity` section after the closing CTA and before the footer. It uses Nepal photos from `assets/visuals/` as a personal visual pause, not as part of the professional work narrative.
+- Browser titles for redesigned public pages should use the exact title `Uttam Deb - Data & AI Professional`.
+- The TenTen page is a product-and-engineering story, not a copied design case study. It should emphasize retrieval, semantic search, memory, agentic workflows, product analytics, evaluation loops, and launch impact.
+- TenTen visuals and provider logos must be stored locally in the repo under `assets/visuals/tenten/` and `assets/visuals/brand-logos/` so the page does not depend on external case-study image hosting.
+- The TenTen page should close with a concise learning-product CTA before the footer, using the same large editorial display style and warm italic emphasis as the homepage.
+- On mobile TenTen split sections, copy should appear before the image for its own segment, even when desktop alternates image-left and image-right layouts. Avoid consecutive unrelated visuals stacking between two text sections.
+- On mobile, TenTen centered editorial headings should become left-aligned and compact, usually two or three lines, so they read as intentional section starts instead of oversized centered posters.
 
 ## Edge Cases
 
