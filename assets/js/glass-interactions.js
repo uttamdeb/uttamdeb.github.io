@@ -94,30 +94,42 @@
 	}, { passive: true });
 })();
 
-/* Silence the benign "Transition was skipped" rejection that browsers emit
-   when a cross-document view transition is interrupted mid-navigation. */
-(function () {
-	window.addEventListener('unhandledrejection', function (event) {
-		var reason = event && event.reason;
-		var message = (reason && reason.message) || (typeof reason === 'string' ? reason : '');
-		if (message && message.indexOf('Transition was skipped') !== -1) {
-			event.preventDefault();
-		}
-	});
-})();
+/* Page-to-page transition: cross-document View Transitions ("sheet drop").
+   The browser keeps the current page painted on screen, renders the next page,
+   then animates between the two real snapshots (styled in design-v2.css) so the
+   incoming page drops in over the old one with no black/blank frame.
 
-/* Page-to-page transition: declarative view transitions when supported,
-   otherwise a lightweight opacity fade-out before navigation. */
-(function () {
-	var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-	var nativeViewTransitions = !!(window.CSS && CSS.supports && CSS.supports('view-transition-name', 'none'));
+   We deliberately do NOT prefetch or prerender. Both make a navigation
+   intermittently get served from a speculation cache, and such navigations do
+   not reliably run the cross-document view transition — which is exactly why
+   the effect "sometimes" fell back to a plain switch. A pure, native navigation
+   fires the transition every time; the browser keeps the old page on screen
+   while the new one loads, so there is still no black frame.
 
-	if (reducedMotion || nativeViewTransitions) {
-		return;
+   This script's only job now is local-dev URLs: on localhost (static dev servers
+   like VS Code Live Server) extensionless internal links are rewritten to their
+   .html file, since only production (Cloudflare Pages) serves clean URLs. */
+(function () {
+	var host = window.location.hostname;
+	var isLocal = host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0' || host === '';
+
+	/* Localhost-only diagnostic: surface when a navigation does NOT run the
+	   cross-document view transition, so intermittent fallbacks can be traced.
+	   `pageswap` fires on the outgoing page, `pagereveal` on the incoming one;
+	   their `viewTransition` is null when the browser declined the transition. */
+	if (isLocal) {
+		window.addEventListener('pageswap', function (event) {
+			try {
+				console.log('[pagefx] pageswap — viewTransition:', !!(event && event.viewTransition),
+					'| navType:', event && event.activation && event.activation.navigationType);
+			} catch (error) {}
+		});
+		window.addEventListener('pagereveal', function (event) {
+			try {
+				console.log('[pagefx] pagereveal — viewTransition:', !!(event && event.viewTransition));
+			} catch (error) {}
+		});
 	}
-
-	var root = document.documentElement;
-	root.classList.add('pagefx-js');
 
 	function isInternalNavigation(anchor) {
 		if (!anchor || !anchor.getAttribute) {
@@ -153,27 +165,37 @@
 		return true;
 	}
 
-	document.addEventListener('click', function (event) {
-		if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
-			return;
+	function resolveDestination(anchor) {
+		var url = new URL(anchor.href, window.location.href);
+		if (isLocal) {
+			var path = url.pathname;
+			if (path !== '/' && path.charAt(path.length - 1) !== '/' && !/\.[a-z0-9]+$/i.test(path)) {
+				return url.origin + path + '.html' + url.search + url.hash;
+			}
 		}
-		if (!event.target || !event.target.closest) {
-			return;
-		}
-		var anchor = event.target.closest('a[href]');
-		if (!isInternalNavigation(anchor)) {
-			return;
-		}
+		return url.href;
+	}
 
-		event.preventDefault();
-		var destination = anchor.href;
-		root.classList.add('is-pagefx-leaving');
-		window.setTimeout(function () {
-			window.location.href = destination;
-		}, 230);
-	});
-
-	window.addEventListener('pageshow', function () {
-		root.classList.remove('is-pagefx-leaving');
-	});
+	/* Only intervene on click for local dev, where extensionless links need the
+	   .html suffix. Everywhere else the browser navigates natively, which is what
+	   triggers the cross-document view transition. */
+	if (isLocal) {
+		document.addEventListener('click', function (event) {
+			if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+				return;
+			}
+			if (!event.target || !event.target.closest) {
+				return;
+			}
+			var anchor = event.target.closest('a[href]');
+			if (!isInternalNavigation(anchor)) {
+				return;
+			}
+			var destination = resolveDestination(anchor);
+			if (destination !== anchor.href) {
+				event.preventDefault();
+				window.location.href = destination;
+			}
+		});
+	}
 })();

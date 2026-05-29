@@ -7,6 +7,7 @@ html {
 html:has(body.design-v2) {
 	font-size: 16px;
 	scroll-padding-top: 6.5rem;
+	background-color: var(--bg);
 }
 
 .design-v2 {
@@ -192,6 +193,10 @@ html:has(body.design-v2) {
 	position: sticky;
 	top: 0.7rem;
 	z-index: 999;
+	/* Lift the nav into its own view-transition group so it is excluded from the
+	   page "sheet drop" and stays pinned in place while the content transitions
+	   behind it (see the page-transition section below). */
+	view-transition-name: site-nav;
 	width: min(var(--max), calc(100vw - (var(--page-pad) * 2)));
 	max-width: var(--max);
 	min-height: 3.85rem;
@@ -3304,30 +3309,90 @@ body.is-preload.design-v2 .greeting.is-leaving {
    v3.1 — Page transitions, button interaction, lightbox
    ========================================================= */
 
-/* ---- Cross-document view transitions (declarative, graceful) ---- */
+/* ---- Page transition: cross-document View Transitions ("sheet drop") ----
+   The browser keeps BOTH the old and the new page on screen during the
+   navigation — the old page stays painted underneath while the fully-rendered
+   new page drops in from the top like a fresh sheet of paper laid over it.
+   Because both are real, painted snapshots, there is never a black/blank frame:
+   the content of the next page is already there beneath the falling edge.
+
+   Speculation-Rules prerender (added by glass-interactions.js) builds the next
+   page in the background so the drop is instant. Browsers without cross-document
+   view transitions (e.g. Firefox) simply navigate normally — no animation, but
+   also no regression. */
 @view-transition { navigation: auto; }
 
+::view-transition-group(root) {
+	z-index: 1;
+	animation-duration: 560ms;
+	animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Override the default cross-fade: both snapshots stay fully opaque so the
+   effect reads as one sheet sliding over another, not a dissolve. */
 ::view-transition-old(root),
 ::view-transition-new(root) {
-	animation-duration: 360ms;
-	animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
-}
-::view-transition-old(root) { animation-name: pagefx-old; }
-::view-transition-new(root) { animation-name: pagefx-new; }
-
-@keyframes pagefx-old {
-	to { opacity: 0; transform: translateY(-10px) scale(0.994); }
-}
-@keyframes pagefx-new {
-	from { opacity: 0; transform: translateY(14px) scale(0.992); }
+	animation-duration: 560ms;
+	animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+	animation-fill-mode: both;
+	mix-blend-mode: normal;
 }
 
-/* JS fallback (browsers without cross-document view transitions): fade out on exit */
-html.pagefx-js #wrapper {
-	transition: opacity 240ms cubic-bezier(0.23, 1, 0.32, 1);
+/* Old page: stays in place beneath, settling back and dimming slightly so the
+   incoming sheet reads as landing on top of it (depth, like turning a page). */
+::view-transition-old(root) {
+	z-index: 1;
+	animation-name: pagefx-recede;
 }
-html.pagefx-js.is-pagefx-leaving #wrapper {
+
+/* New page: an opaque sheet dropping in from above, with a soft leading shadow. */
+::view-transition-new(root) {
+	z-index: 2;
+	animation-name: pagefx-drop;
+}
+
+/* Nav: its own group, pinned above the dropping sheet and held perfectly still
+   so it reads as a sticky panel while the page changes behind it.
+   We show ONLY the new bar and disable the group's geometry morph — otherwise
+   the previous page's bar (captured at a different scroll position) would briefly
+   appear stacked beneath the new one. One bar, no movement, no duplicate. */
+::view-transition-group(site-nav) {
+	z-index: 50;
+	animation: none;
+}
+::view-transition-old(site-nav) {
+	animation: none;
 	opacity: 0;
+}
+::view-transition-new(site-nav) {
+	animation: none;
+	opacity: 1;
+}
+
+@keyframes pagefx-recede {
+	from { transform: translateY(0) scale(1); filter: brightness(1); }
+	to   { transform: translateY(26px) scale(0.985); filter: brightness(0.78); }
+}
+@keyframes pagefx-drop {
+	from {
+		transform: translateY(-100%);
+		box-shadow: 0 36px 90px rgba(0, 0, 0, 0.55);
+	}
+	to {
+		transform: translateY(0);
+		box-shadow: 0 36px 90px rgba(0, 0, 0, 0);
+	}
+}
+
+/* The base HTML5UP template ships its own intro curtain — #wrapper.fade-in::before
+   is a full-viewport #1e252d panel held opaque during .is-preload, then faded out
+   over ~1.75s after every window load. It must stay disabled: not only does it
+   cause a dark flash, it would be captured INTO the new page's view-transition
+   snapshot, so the dropping sheet would be a black rectangle instead of content.
+   With it gone, content (which .is-preload only freezes, never hides) is painted
+   in the snapshot — the next page is genuinely "there" as it drops in. */
+.design-v2 #wrapper.fade-in::before {
+	display: none !important;
 }
 
 /* ---- Button hover / press / click polish ---- */
@@ -3585,6 +3650,7 @@ body.serenity-lightbox-open {
 
 /* ---- Reduced-motion guards for the new effects ---- */
 @media (prefers-reduced-motion: reduce) {
+	::view-transition-group(root),
 	::view-transition-old(root),
 	::view-transition-new(root) {
 		animation: none !important;
@@ -3604,22 +3670,23 @@ body.serenity-lightbox-open {
 	margin: 0;
 	padding: clamp(0.5rem, 2vw, 1rem) var(--page-pad) clamp(1.5rem, 4vw, 2.4rem);
 	text-align: center;
-	color: var(--text-subtle);
+	color: var(--text-muted);
 	font-family: var(--font-mono);
-	font-size: 0.62rem;
+	font-size: 0.64rem;
 	font-weight: 400;
 	letter-spacing: 0.03em;
 	line-height: 1.6;
-	opacity: 0.75;
 }
 .design-v2 .design-credit a {
-	color: var(--text-subtle);
-	text-decoration: none;
+	color: var(--text) !important;
+	text-decoration: underline;
+	text-decoration-color: color-mix(in srgb, var(--text) 35%, transparent);
+	text-underline-offset: 0.18em;
 	border: 0;
 	transition: color 200ms var(--ease-fast);
 }
 .design-v2 .design-credit a:hover {
-	color: var(--text-muted);
+	color: var(--accent) !important;
 }
 
 /* ---- Render-cost optimization: skip offscreen heavy sections ---- */
