@@ -6,7 +6,7 @@ v3.1.0 (May 28, 2026)
 1. Added a new page: Origin Labs
 2. Enhanced TenTen page
 3. Added more photos in serenity photo booth.
-4. Visual improvements
+4. Visual improvements and optimization
 
 v3.0.0 (May 26, 2026)
 1. Full portfolio design overhaul with a dark-default editorial storytelling homepage.
