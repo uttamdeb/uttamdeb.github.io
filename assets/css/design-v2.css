@@ -1970,9 +1970,9 @@ body.is-preload.design-v2 .greeting.is-leaving {
 	margin: 0;
 	color: var(--text) !important;
 	font-family: var(--font-display);
-	font-size: clamp(2.9rem, 6.5vw, 6.8rem);
+	font-size: clamp(2.4rem, 5vw, 4.9rem);
 	font-weight: 380;
-	line-height: 0.98;
+	line-height: 1.0;
 	letter-spacing: 0;
 	text-wrap: balance;
 }
@@ -2231,20 +2231,46 @@ body.is-preload.design-v2 .greeting.is-leaving {
 	display: inline-flex;
 	align-items: center;
 	gap: 0.5rem;
+	align-self: flex-start;
+	padding: 0.34rem 0.74rem 0.34rem 0.6rem;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
 	color: var(--warm) !important;
 	font-family: var(--font-mono);
-	font-size: 0.72rem;
-	font-weight: 700;
-	letter-spacing: 0.08em;
+	font-size: 0.62rem;
+	font-weight: 600;
+	letter-spacing: 0.18em;
 	text-transform: uppercase;
 }
 
+:root[data-theme="light"] .design-v2 .origin-directory-label {
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0.045), rgba(0, 0, 0, 0.015));
+}
+
 .design-v2 .origin-directory-dot {
+	position: relative;
 	width: 0.46rem;
 	height: 0.46rem;
 	border-radius: 50%;
 	background: var(--accent-2);
-	box-shadow: 0 0 14px rgba(126, 231, 200, 0.5);
+	box-shadow: 0 0 12px rgba(126, 231, 200, 0.55);
+}
+
+.design-v2 .origin-directory-dot::after {
+	content: "";
+	position: absolute;
+	inset: -3px;
+	border-radius: 50%;
+	border: 1px solid var(--accent-2);
+	opacity: 0;
+	animation: origin-dot-pulse 2.6s var(--ease) infinite;
+}
+
+@keyframes origin-dot-pulse {
+	0% { transform: scale(0.5); opacity: 0.7; }
+	70% { transform: scale(2.1); opacity: 0; }
+	100% { transform: scale(2.1); opacity: 0; }
 }
 
 .design-v2 .origin-directory-list {
@@ -2373,7 +2399,7 @@ body.is-preload.design-v2 .greeting.is-leaving {
 
 .design-v2.page-origin .tenten-final-cta h2 {
 	max-width: 30ch;
-	font-size: clamp(2.6rem, 5.6vw, 5.2rem);
+	font-size: clamp(2.2rem, 4.3vw, 4rem);
 }
 
 .design-v2 .fadeOut,
@@ -3194,10 +3220,10 @@ body.is-preload.design-v2 .greeting.is-leaving {
 	}
 
 	.design-v2 .tenten-final-cta h2 {
-		max-width: 16ch;
+		max-width: 18ch;
 		margin-inline: auto;
-		font-size: clamp(2rem, 9vw, 2.55rem);
-		line-height: 1.05;
+		font-size: clamp(1.8rem, 7.6vw, 2.25rem);
+		line-height: 1.08;
 	}
 
 	.design-v2 #footer,
@@ -3272,4 +3298,333 @@ body.is-preload.design-v2 .greeting.is-leaving {
 		border: 0 !important;
 		box-shadow: none !important;
 	}
+}
+
+/* =========================================================
+   v3.1 — Page transitions, button interaction, lightbox
+   ========================================================= */
+
+/* ---- Cross-document view transitions (declarative, graceful) ---- */
+@view-transition { navigation: auto; }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation-duration: 360ms;
+	animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
+::view-transition-old(root) { animation-name: pagefx-old; }
+::view-transition-new(root) { animation-name: pagefx-new; }
+
+@keyframes pagefx-old {
+	to { opacity: 0; transform: translateY(-10px) scale(0.994); }
+}
+@keyframes pagefx-new {
+	from { opacity: 0; transform: translateY(14px) scale(0.992); }
+}
+
+/* JS fallback (browsers without cross-document view transitions): fade out on exit */
+html.pagefx-js #wrapper {
+	transition: opacity 240ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+html.pagefx-js.is-pagefx-leaving #wrapper {
+	opacity: 0;
+}
+
+/* ---- Button hover / press / click polish ---- */
+.design-v2 .button,
+.design-v2 button.button,
+.design-v2 input[type="submit"] {
+	position: relative;
+	overflow: hidden;
+	isolation: isolate;
+	transition: transform 240ms var(--ease), background 200ms var(--ease-fast),
+		border-color 200ms var(--ease-fast), box-shadow 260ms var(--ease), color 200ms var(--ease-fast);
+}
+
+.design-v2 .button:hover,
+.design-v2 button.button:hover,
+.design-v2 input[type="submit"]:hover {
+	box-shadow: 0 12px 30px -14px rgba(0, 0, 0, 0.6);
+}
+
+.design-v2 .button.primary:hover,
+.design-v2 input[type="submit"].primary:hover {
+	box-shadow: 0 14px 34px -12px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+.design-v2 .button:active,
+.design-v2 button.button:active,
+.design-v2 input[type="submit"]:active {
+	transform: translateY(0) scale(0.965);
+	transition-duration: 90ms;
+}
+
+/* sheen sweep on hover */
+.design-v2 .button::after,
+.design-v2 button.button::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	background: linear-gradient(110deg, transparent 32%, rgba(255, 255, 255, 0.4) 50%, transparent 68%);
+	background-size: 240% 100%;
+	background-position: 170% 0;
+	opacity: 0;
+	pointer-events: none;
+	z-index: 1;
+}
+.design-v2 .button:hover::after,
+.design-v2 button.button:hover::after {
+	animation: btn-sheen 720ms var(--ease);
+}
+@keyframes btn-sheen {
+	0% { background-position: 170% 0; opacity: 0; }
+	16% { opacity: 1; }
+	100% { background-position: -70% 0; opacity: 0; }
+}
+
+/* ---- Nav link / icon hover + press ---- */
+.design-v2 #nav ul.links a,
+.design-v2 #nav ul.icons a.icon,
+.design-v2 #nav ul.icons button {
+	position: relative;
+	overflow: hidden;
+	transition: color 200ms var(--ease-fast), background 220ms var(--ease), transform 220ms var(--ease);
+}
+.design-v2 #nav ul.links a:hover,
+.design-v2 #nav ul.icons a.icon:hover {
+	transform: translateY(-1px);
+}
+.design-v2 #nav ul.links a:active,
+.design-v2 #nav ul.icons a.icon:active,
+.design-v2 #nav ul.icons button:active {
+	transform: scale(0.93);
+	transition-duration: 90ms;
+}
+
+/* ---- Click ripple (shared) ---- */
+.design-v2 .fx-ripple {
+	position: absolute;
+	border-radius: 50%;
+	background: currentColor;
+	transform: scale(0);
+	opacity: 0.2;
+	pointer-events: none;
+	z-index: 0;
+	animation: fx-ripple 600ms var(--ease-fast) forwards;
+}
+@keyframes fx-ripple {
+	0% { transform: scale(0); opacity: 0.22; }
+	100% { transform: scale(2.6); opacity: 0; }
+}
+
+/* ---- Serenity lightbox ---- */
+.design-v2 .serenity-card--front {
+	cursor: zoom-in;
+}
+.design-v2 .serenity-booth.is-paused .serenity-img,
+.design-v2 .serenity-booth.is-paused .serenity-caption-line {
+	animation-play-state: paused;
+}
+body.serenity-lightbox-open {
+	overflow: hidden;
+}
+
+.design-v2 .serenity-lightbox {
+	position: fixed;
+	inset: 0;
+	z-index: 1200;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: clamp(1rem, 4vw, 3rem);
+	background: rgba(5, 6, 7, 0.82);
+	-webkit-backdrop-filter: blur(18px) saturate(130%);
+	backdrop-filter: blur(18px) saturate(130%);
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 320ms var(--ease), visibility 0s linear 320ms;
+}
+:root[data-theme="light"] .design-v2 .serenity-lightbox {
+	background: rgba(20, 16, 10, 0.62);
+}
+.design-v2 .serenity-lightbox.is-open {
+	opacity: 1;
+	visibility: visible;
+	transition: opacity 320ms var(--ease);
+}
+
+.design-v2 .serenity-lightbox-figure {
+	position: relative;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.85rem;
+	max-width: min(94vw, 1180px);
+	max-height: 88vh;
+	transform: scale(0.94);
+	opacity: 0;
+	transition: transform 380ms var(--ease), opacity 300ms var(--ease);
+}
+.design-v2 .serenity-lightbox.is-open .serenity-lightbox-figure {
+	transform: scale(1);
+	opacity: 1;
+}
+
+.design-v2 .serenity-lightbox-img {
+	display: block;
+	max-width: 100%;
+	max-height: 78vh;
+	width: auto;
+	height: auto;
+	margin: 0 auto;
+	object-fit: contain;
+	border-radius: var(--radius-lg);
+	box-shadow: var(--shadow-strong);
+	background: rgba(255, 255, 255, 0.04);
+	transition: opacity 220ms var(--ease-fast), transform 300ms var(--ease);
+	will-change: opacity, transform;
+}
+.design-v2 .serenity-lightbox-img.is-swapping {
+	opacity: 0;
+	transform: scale(0.96);
+}
+
+.design-v2 .serenity-lightbox-caption {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+	padding: 0 0.2rem;
+	font-family: var(--font-mono);
+	font-size: 0.68rem;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--text-muted);
+}
+.design-v2 .serenity-lightbox-count {
+	color: var(--text-subtle);
+	white-space: nowrap;
+}
+
+.design-v2 .serenity-lightbox-btn,
+.design-v2 .serenity-lightbox-close {
+	position: absolute;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	border-radius: 999px;
+	border: 1px solid rgba(255, 255, 255, 0.22);
+	background: rgba(12, 14, 18, 0.55);
+	box-shadow: none;
+	color: #fff !important;
+	font: inherit;
+	line-height: 1;
+	letter-spacing: normal;
+	text-transform: none;
+	cursor: pointer;
+	-webkit-backdrop-filter: blur(8px);
+	backdrop-filter: blur(8px);
+	transition: background 200ms var(--ease-fast), border-color 200ms var(--ease-fast), transform 180ms var(--ease);
+}
+.design-v2 .serenity-lightbox-btn:hover,
+.design-v2 .serenity-lightbox-close:hover {
+	background: rgba(255, 255, 255, 0.18);
+	border-color: rgba(255, 255, 255, 0.4);
+	box-shadow: none;
+	color: #fff !important;
+}
+.design-v2 .serenity-lightbox-btn svg,
+.design-v2 .serenity-lightbox-close svg {
+	width: 1.3rem;
+	height: 1.3rem;
+	flex: 0 0 auto;
+	color: #fff;
+}
+
+.design-v2 .serenity-lightbox-btn {
+	top: 50%;
+	width: 3rem;
+	height: 3rem;
+	transform: translateY(-50%);
+	z-index: 2;
+}
+.design-v2 .serenity-lightbox-btn:hover {
+	transform: translateY(-50%) scale(1.06);
+}
+.design-v2 .serenity-lightbox-btn:active {
+	transform: translateY(-50%) scale(0.9);
+}
+.design-v2 .serenity-lightbox-prev { left: clamp(0.6rem, 2.5vw, 1.6rem); }
+.design-v2 .serenity-lightbox-next { right: clamp(0.6rem, 2.5vw, 1.6rem); }
+
+.design-v2 .serenity-lightbox-close {
+	top: clamp(0.8rem, 2.5vw, 1.5rem);
+	right: clamp(0.8rem, 2.5vw, 1.5rem);
+	width: 2.7rem;
+	height: 2.7rem;
+	z-index: 3;
+}
+.design-v2 .serenity-lightbox-close:active {
+	transform: scale(0.9);
+}
+
+@media (max-width: 600px) {
+	.design-v2 .serenity-lightbox-btn {
+		width: 2.6rem;
+		height: 2.6rem;
+		top: auto;
+		bottom: clamp(0.8rem, 4vw, 1.4rem);
+		transform: none;
+	}
+	.design-v2 .serenity-lightbox-btn:hover { transform: none; }
+	.design-v2 .serenity-lightbox-btn:active { transform: scale(0.9); }
+	.design-v2 .serenity-lightbox-img { max-height: 70vh; }
+}
+
+/* ---- Reduced-motion guards for the new effects ---- */
+@media (prefers-reduced-motion: reduce) {
+	::view-transition-old(root),
+	::view-transition-new(root) {
+		animation: none !important;
+	}
+	.design-v2 .button::after,
+	.design-v2 button.button::after,
+	.design-v2 .fx-ripple {
+		display: none !important;
+	}
+}
+
+/* ---- Subtle design credit ---- */
+.design-v2 .design-credit {
+	grid-column: 1 / -1;
+	width: 100%;
+	max-width: none;
+	margin: 0;
+	padding: clamp(0.5rem, 2vw, 1rem) var(--page-pad) clamp(1.5rem, 4vw, 2.4rem);
+	text-align: center;
+	color: var(--text-subtle);
+	font-family: var(--font-mono);
+	font-size: 0.62rem;
+	font-weight: 400;
+	letter-spacing: 0.03em;
+	line-height: 1.6;
+	opacity: 0.75;
+}
+.design-v2 .design-credit a {
+	color: var(--text-subtle);
+	text-decoration: none;
+	border: 0;
+	transition: color 200ms var(--ease-fast);
+}
+.design-v2 .design-credit a:hover {
+	color: var(--text-muted);
+}
+
+/* ---- Render-cost optimization: skip offscreen heavy sections ---- */
+.design-v2 .serenity-section,
+.design-v2 #footer {
+	content-visibility: auto;
+	contain-intrinsic-size: auto 640px;
 }

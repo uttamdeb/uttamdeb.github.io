@@ -63,6 +63,8 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link rel="dns-prefetch" href="https://www.clarity.ms">
 
+		<link rel="preload" as="image" href="assets/visuals/uttam-new.webp" type="image/webp" fetchpriority="high">
+
 		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -155,13 +157,13 @@
 						<div class="portrait-booth">
 							<div class="portrait-card portrait-card--back" aria-hidden="true">
 								<img class="portrait-img portrait-img--cycle-1" src="assets/visuals/uttam-new.webp" alt="" width="3074" height="4096" loading="eager" decoding="async" />
-								<img class="portrait-img portrait-img--cycle-2" src="assets/visuals/uttam-new-2.webp" alt="" width="3074" height="4096" loading="eager" decoding="async" />
-								<img class="portrait-img portrait-img--cycle-3" src="assets/visuals/uttam-new-3.webp" alt="" width="3074" height="4096" loading="eager" decoding="async" />
+								<img class="portrait-img portrait-img--cycle-2" src="assets/visuals/uttam-new-2.webp" alt="" width="3074" height="4096" loading="eager" decoding="async" fetchpriority="low" />
+								<img class="portrait-img portrait-img--cycle-3" src="assets/visuals/uttam-new-3.webp" alt="" width="3074" height="4096" loading="eager" decoding="async" fetchpriority="low" />
 							</div>
 							<div class="portrait-card portrait-card--front" data-glass>
-								<img class="portrait-img portrait-img--cycle-1" src="assets/visuals/uttam-new.webp" alt="Uttam Deb by the sea" width="3074" height="4096" loading="eager" decoding="async" />
-								<img class="portrait-img portrait-img--cycle-2" src="assets/visuals/uttam-new-2.webp" alt="" width="3074" height="4096" loading="eager" decoding="async" aria-hidden="true" />
-								<img class="portrait-img portrait-img--cycle-3" src="assets/visuals/uttam-new-3.webp" alt="" width="3074" height="4096" loading="eager" decoding="async" aria-hidden="true" />
+								<img class="portrait-img portrait-img--cycle-1" src="assets/visuals/uttam-new.webp" alt="Uttam Deb by the sea" width="3074" height="4096" loading="eager" decoding="async" fetchpriority="high" />
+								<img class="portrait-img portrait-img--cycle-2" src="assets/visuals/uttam-new-2.webp" alt="" width="3074" height="4096" loading="eager" decoding="async" aria-hidden="true" fetchpriority="low" />
+								<img class="portrait-img portrait-img--cycle-3" src="assets/visuals/uttam-new-3.webp" alt="" width="3074" height="4096" loading="eager" decoding="async" aria-hidden="true" fetchpriority="low" />
 							</div>
 						</div>
 						<div class="hero-stat" data-glass>
@@ -420,7 +422,7 @@
 			<div id="copyright">
 				<ul>
 					<li><b>&copy; 2026 Uttam Deb</b></li>
-					<li><b>v3.0.0</b></li>
+					<li><b>v3.1.0</b></li>
 					<li><b>Hosted on <a href="https://github.com">GitHub</a></b></li>
 				</ul>
 			</div>
