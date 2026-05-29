@@ -557,9 +557,17 @@ html:has(body.design-v2) {
 .design-v2 .hero-story {
 	display: grid;
 	grid-template-columns: minmax(0, 0.95fr) minmax(19rem, 0.82fr);
+	grid-template-rows: auto auto;
 	align-items: center;
 	gap: clamp(2rem, 5vw, 4rem);
 	padding: clamp(1.5rem, 3vw, 2.6rem) 0 clamp(1rem, 2vw, 1.8rem);
+}
+
+/* Greeting spans both columns and centers across the full hero width */
+.design-v2 .hero-story > .greeting-block {
+	grid-column: 1 / -1;
+	justify-self: center;
+	margin-bottom: 0;
 }
 
 .design-v2 #main > .hero-story {
@@ -573,11 +581,11 @@ html:has(body.design-v2) {
 .design-v2 .greeting-block {
 	display: flex;
 	flex-direction: column;
-	align-items: flex-end;
+	align-items: center;
 	gap: 0.35rem;
 	max-width: 100%;
 	margin: 0 0 clamp(1.25rem, 2.4vw, 2rem);
-	text-align: right;
+	text-align: center;
 }
 
 .design-v2 #greeting,
