@@ -659,6 +659,8 @@ These notes capture alignment and browser issues found during the v3 implementat
 
 ## Share Surfaces: `/scan-me` and `/details` (v3.2)
 
+**See `SHARE-CARDS.md` for the full implementation guide.** The notes below are the short-form constraints for anyone editing these pages.
+
 These two pages exist to hand a profile to someone standing in front of you: a QR shown on a screen, and the concise card it points at. Both are sized to exactly one screen at every supported breakpoint, neither is in the primary nav, and neither carries the site footer.
 
 ### The QR

@@ -17,7 +17,8 @@ v3.2.0 (August 27, 2026)
 12. That navigation runs a dedicated transition, the card lifting away while the site rises from beneath, with the arrow morphing into the homepage scroll cue.
 13. Added assets/js/share-cards.js. Both pages remain fully usable without JavaScript.
 14. /scan-me shows one code by default, the page link, exactly as before. A quiet "No internet?" control under it swaps the card in place to a second code that carries a lean vCard as text, so a reader with no connection can still save the contact; the vCard holds the /details URL so the full card follows once they have signal. The control is script-only and hidden without JavaScript.
-15. Gave every page a distinct browser title in the form "Uttam Deb - Data & AI Professional | Section"; the homepage keeps the bare title.
+15. Added SHARE-CARDS.md, an implementation guide for /scan-me and /details.
+16. Gave every page a distinct browser title in the form "Uttam Deb - Data & AI Professional | Section"; the homepage keeps the bare title.
 
 v3.1.0 (May 28, 2026)
 1. Added a new page: Origin Labs
