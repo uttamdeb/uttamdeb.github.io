@@ -10,10 +10,10 @@ v3.2.0 (August 27, 2026)
 5. QR reveal is staged: the three finder rings draw themselves, a diagonal light sweep materialises the dot bands in its wake, and the monogram lands last. Replays on tap for live sharing.
 6. QR card stays white in both themes so scanning contrast never depends on the theme.
 7. Added a downloadable QR at assets/visuals/qr/uttamdeb-details-qr.svg, its generator, and print styles so /scan-me can be printed as a table tent.
-8. /details leads with a centred portrait, name, role, and one positioning line, then the two actions that matter and a compact rail of five contacts.
-9. "Save contact" glows, and opens the phone's own add-contact sheet with every field prefilled from assets/uttam-deb.vcf, including a photo. The vCard link deliberately omits `download` so iOS opens Contacts rather than Files.
+8. /details leads with a centred portrait, name and role, then the two actions that matter and a compact rail of five contacts. The name is set in Instrument Serif Italic, the same face as the site's editorial accents.
+9. "Save contact" glows, and opens the phone's own add-contact sheet with the fields prefilled. On iOS the link goes straight to assets/uttam-deb.vcf (photo included) with no `download` attribute, so Safari shows its Add to Contacts sheet instead of saving a file. On Chromium Android it is swapped for an ACTION_INSERT intent, which opens the contact editor directly rather than downloading; that path carries no photo, and falls back to the vCard anywhere the intent is not understood.
 10. "Share" uses the Web Share API with a clipboard fallback.
-11. Scrolling down at the foot of /details carries you into the site: downward intent fills a small meter, then navigates. The cue remains a real link for clicking and keyboard use.
+11. Scrolling down at the foot of /details carries you into the site: downward intent closes a gradient arc around the arrow and sheds drifting crystals as it builds, then navigates. The cue remains a real link for clicking and keyboard use.
 12. That navigation runs a dedicated transition, the card lifting away while the site rises from beneath, with the arrow morphing into the homepage scroll cue.
 13. Added assets/js/share-cards.js. Both pages remain fully usable without JavaScript.
 

@@ -99,11 +99,70 @@
 		});
 	}
 
-	/* ---- /details: a word after the vCard opens ------------------------- */
+	/* ---- /details: open the phone's own add-contact screen ---------------
+	   iOS already does the right thing: the markup links straight at a
+	   text/x-vcard file with no `download` attribute, so Safari shows its
+	   "Add to Contacts" sheet with everything filled in — no file, no detour.
+
+	   Android is the gap. Chrome downloads the .vcf and makes you tap the
+	   notification to import it. Chromium browsers do understand `intent://`
+	   URLs though, so there we swap the href for an ACTION_INSERT intent, which
+	   drops the reader straight into the contact editor with the fields
+	   prefilled. It carries no photo — that is the trade for skipping the
+	   download — and `browser_fallback_url` sends anything that cannot handle
+	   the intent back to the .vcf.
+
+	   The href in the markup is the vCard, so this is purely an upgrade: with
+	   no JavaScript, or on any platform we do not special-case, the file link
+	   is what runs. */
+	var CONTACT = {
+		name: 'Uttam Deb',
+		phone: '+8801718067555',
+		email: 'uttamdeb670@gmail.com',
+		company: '10 Minute School',
+		job_title: 'Assistant Manager of Business Intelligence and Specialist AI Systems Developer',
+		postal: 'Dhaka, Bangladesh',
+		notes: 'https://uttamdeb.com'
+	};
+
+	function androidIntentUrl(fallbackUrl) {
+		var parts = [
+			'intent://contact/#Intent',
+			'action=android.intent.action.INSERT',
+			'type=vnd.android.cursor.dir/contact'
+		];
+
+		Object.keys(CONTACT).forEach(function (key) {
+			parts.push('S.' + key + '=' + encodeURIComponent(CONTACT[key]));
+		});
+
+		parts.push('S.browser_fallback_url=' + encodeURIComponent(fallbackUrl));
+		parts.push('end');
+		return parts.join(';');
+	}
+
+	function prefersAndroidIntent() {
+		var ua = navigator.userAgent || '';
+		if (!/Android/i.test(ua)) {
+			return false;
+		}
+		/* Firefox for Android has no intent: support and would simply stall. */
+		return /Chrome|CriOS|SamsungBrowser|EdgA|OPR/i.test(ua) && !/Firefox|FxiOS/i.test(ua);
+	}
+
 	function setupVcard() {
 		var link = document.querySelector('[data-vcard]');
+		if (!link) {
+			return;
+		}
+
+		if (prefersAndroidIntent()) {
+			link.setAttribute('href', androidIntentUrl(link.href));
+			link.setAttribute('data-vcard-mode', 'intent');
+		}
+
 		var toast = document.querySelector('[data-toast]');
-		if (!link || !toast) {
+		if (!toast) {
 			return;
 		}
 
@@ -147,6 +206,60 @@
 			return (scrolled + window.innerHeight) >= (doc.scrollHeight - 4);
 		}
 
+		/* ---- crystals shed while the gesture is held ---------------------- */
+		var FLAKE = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23fff' stroke-width='2.3' stroke-linecap='round'%3E%3Cpath d='M12 2.5v19M3.8 7.25l16.4 9.5M20.2 7.25l-16.4 9.5'/%3E%3Cpath d='M12 6.1 9.9 4M12 6.1 14.1 4M12 17.9 9.9 20M12 17.9l2.1 2.1'/%3E%3Cpath d='m7.4 9 -2.9-.5M7.4 9l-.5-2.9M16.6 15l2.9.5M16.6 15l.5 2.9'/%3E%3Cpath d='m7.4 15-2.9.5M7.4 15l-.5 2.9M16.6 9l2.9-.5M16.6 9l.5-2.9'/%3E%3C/g%3E%3C/svg%3E\")";
+		var TINTS = ['var(--accent)', 'var(--accent-2)', 'var(--warm)'];
+		var MAX_FLAKES = 32;
+		var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		var layer = null;
+		var live = 0;
+		var shedAt = 0;
+
+		function flakeLayer() {
+			if (!layer) {
+				layer = document.createElement('div');
+				layer.className = 'explore-flakes';
+				document.body.appendChild(layer);
+			}
+			return layer;
+		}
+
+		function shed(count) {
+			if (reduced) {
+				return;
+			}
+
+			var dial = cue.querySelector('.explore-dial') || cue;
+			var box = dial.getBoundingClientRect();
+			var host = flakeLayer();
+
+			for (var i = 0; i < count && live < MAX_FLAKES; i++) {
+				var el = document.createElement('span');
+				var size = 8 + Math.random() * 7;
+				el.className = 'explore-flake';
+				el.style.left = (box.left + box.width * (0.15 + Math.random() * 0.7)) + 'px';
+				el.style.top = (box.top + box.height * (0.6 + Math.random() * 0.3)) + 'px';
+				el.style.color = TINTS[(Math.random() * TINTS.length) | 0];
+				el.style.setProperty('--flake', FLAKE);
+				el.style.setProperty('--size', size.toFixed(1) + 'px');
+				el.style.setProperty('--dx', ((Math.random() - 0.5) * 104).toFixed(1) + 'px');
+				el.style.setProperty('--dy', (52 + Math.random() * 72).toFixed(1) + 'px');
+				el.style.setProperty('--rot', ((Math.random() - 0.5) * 300).toFixed(0) + 'deg');
+				el.style.setProperty('--dur', (1150 + Math.random() * 900).toFixed(0) + 'ms');
+				el.style.setProperty('--peak', (0.68 + Math.random() * 0.32).toFixed(2));
+
+				live++;
+				el.addEventListener('animationend', function () {
+					live--;
+					if (this.parentNode) {
+						this.parentNode.removeChild(this);
+					}
+				});
+
+				host.appendChild(el);
+			}
+		}
+
 		function render() {
 			cue.style.setProperty('--p', (intent / THRESHOLD).toFixed(3));
 		}
@@ -171,11 +284,24 @@
 			intent = Math.min(THRESHOLD, intent + delta);
 			render();
 
+			/* Keyed to progress, not to raw delta: browsers scale wheel and touch
+			   deltas very differently, and the shed should look the same density
+			   whatever device the gesture came from. */
+			var pct = intent / THRESHOLD;
+			while (pct - shedAt >= 0.04) {
+				shedAt += 0.04;
+				shed(shedAt > 0.6 ? 2 : 1);
+			}
+
 			if (intent >= THRESHOLD) {
 				fired = true;
 				window.clearTimeout(decayTimer);
 				cue.classList.add('is-triggering');
-				window.location.href = target;
+				shed(10);
+				/* let the burst register before the page turns over */
+				window.setTimeout(function () {
+					window.location.href = target;
+				}, 130);
 				return;
 			}
 
@@ -187,6 +313,7 @@
 				return;
 			}
 			intent = Math.max(0, intent - delta);
+			shedAt = Math.min(shedAt, intent / THRESHOLD);
 			render();
 		}
 
