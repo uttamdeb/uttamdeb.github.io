@@ -3879,75 +3879,116 @@ body.serenity-lightbox-open {
 	height: auto;
 }
 
-/* A slow shine crossing the code — reads as "live", and at this opacity it is
+/* The light bar that draws the code. It sweeps diagonally along the same axis
+   as the colour gradient and the dot bands switch on in its wake, so it reads
+   as the thing painting the symbol rather than a shine passing over a finished
+   one. Afterwards it settles into a slow ambient pass. At this opacity it is
    far gentler than the screen glare any scanner already copes with. */
 .design-v2 .scan-sweep {
 	position: absolute;
-	left: 0;
-	right: 0;
-	top: 0;
-	height: 34%;
-	background: linear-gradient(180deg, rgba(36, 91, 219, 0) 0%, rgba(36, 91, 219, 0.13) 45%, rgba(20, 125, 100, 0.1) 60%, rgba(36, 91, 219, 0) 100%);
+	inset: 0;
+	background: linear-gradient(135deg,
+		rgba(36, 91, 219, 0) 40%,
+		rgba(36, 91, 219, 0.14) 47%,
+		rgba(126, 231, 200, 0.20) 50%,
+		rgba(138, 90, 35, 0.13) 53%,
+		rgba(36, 91, 219, 0) 60%);
+	background-size: 260% 260%;
+	background-position: 0% 0%;
 	opacity: 0;
 	pointer-events: none;
 }
 
 .design-v2 .scan-frame.is-live .scan-sweep {
-	animation: scan-sweep 5.2s cubic-bezier(0.5, 0, 0.5, 1) 1.65s infinite;
+	animation:
+		scan-draw-sweep 1250ms cubic-bezier(0.4, 0, 0.35, 1) 200ms both,
+		scan-ambient-sweep 6.5s cubic-bezier(0.5, 0, 0.5, 1) 3s infinite forwards;
 }
 
-@keyframes scan-sweep {
-	0% { transform: translateY(-110%); opacity: 0; }
-	8% { opacity: 1; }
-	38% { opacity: 1; }
-	46% { transform: translateY(320%); opacity: 0; }
-	100% { transform: translateY(320%); opacity: 0; }
+@keyframes scan-draw-sweep {
+	0% { background-position: 0% 0%; opacity: 0; }
+	12% { opacity: 1; }
+	80% { opacity: 1; }
+	100% { background-position: 100% 100%; opacity: 0; }
 }
 
-/* ---- QR bloom: rings materialise outward from the monogram -------------- */
+@keyframes scan-ambient-sweep {
+	0% { background-position: 0% 0%; opacity: 0; }
+	6% { opacity: 0.8; }
+	26% { opacity: 0.8; }
+	34% { background-position: 100% 100%; opacity: 0; }
+	100% { background-position: 100% 100%; opacity: 0; }
+}
+
+/* ---- The reveal ---------------------------------------------------------
+   Staged in the order the eye wants to read it: the three finder rings draw
+   themselves, their cores land, the dot bands materialise diagonally in the
+   sweep's wake, and the monogram badge presses in last. */
 .design-v2 .qr-band,
-.design-v2 .qr-eye,
-.design-v2 .qr-mark {
-	transform-box: view-box;
-	transform-origin: 50% 50%;
+.design-v2 .qr-eye-core,
+.design-v2 .qr-mark-glyph {
+	transform-box: fill-box;
+	transform-origin: center;
 }
 
-/* Hidden only once the enhancement script is present, so a QR still renders
-   in full when JavaScript never runs. */
+/* The starting state is applied only once the enhancement script is present,
+   so a scripting failure still leaves a complete, scannable code. */
 .design-v2.qr-anim .scan-frame:not(.is-live) .qr-band,
 .design-v2.qr-anim .scan-frame:not(.is-live) .qr-eye,
 .design-v2.qr-anim .scan-frame:not(.is-live) .qr-mark {
 	opacity: 0;
 }
 
-.design-v2.qr-anim .scan-frame.is-live .qr-eye {
-	animation: qr-eye-in 520ms var(--ease) both;
-	animation-delay: calc(120ms + var(--i) * 80ms);
+.design-v2.qr-anim .qr-eye-ring,
+.design-v2.qr-anim .qr-mark-ring {
+	/* pathLength="100" is set in the markup, so one dash length fits both */
+	stroke-dasharray: 100;
+	stroke-dashoffset: 100;
+}
+
+.design-v2.qr-anim .scan-frame.is-live .qr-eye-ring {
+	animation: qr-ring-draw 620ms cubic-bezier(0.65, 0, 0.35, 1) both;
+	animation-delay: calc(140ms + var(--i) * 95ms);
+}
+
+.design-v2.qr-anim .scan-frame.is-live .qr-eye-core {
+	animation: qr-core-in 480ms cubic-bezier(0.34, 1.5, 0.64, 1) both;
+	animation-delay: calc(540ms + var(--i) * 95ms);
 }
 
 .design-v2.qr-anim .scan-frame.is-live .qr-band {
-	animation: qr-band-in 540ms var(--ease) both;
-	animation-delay: calc(300ms + var(--i) * 32ms);
+	animation: qr-band-in 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+	animation-delay: calc(330ms + var(--i) * 44ms);
 }
 
-.design-v2.qr-anim .scan-frame.is-live .qr-mark {
-	animation: qr-mark-in 620ms cubic-bezier(0.34, 1.46, 0.64, 1) 820ms both;
-	transform-box: fill-box;
+.design-v2.qr-anim .scan-frame.is-live .qr-mark-ring {
+	animation: qr-ring-draw 720ms cubic-bezier(0.65, 0, 0.35, 1) 1180ms both;
 }
 
-@keyframes qr-eye-in {
-	from { opacity: 0; transform: scale(0.55); }
+.design-v2.qr-anim .scan-frame.is-live .qr-mark-glyph {
+	animation: qr-glyph-in 760ms cubic-bezier(0.34, 1.45, 0.64, 1) 1400ms both;
+}
+
+@keyframes qr-ring-draw {
+	from { stroke-dashoffset: 100; }
+	to { stroke-dashoffset: 0; }
+}
+
+@keyframes qr-core-in {
+	from { opacity: 0; transform: scale(0.2); }
 	to { opacity: 1; transform: scale(1); }
 }
 
+/* Dots arrive travelling along the diagonal with the sweep, rather than
+   simply fading up where they stand. */
 @keyframes qr-band-in {
-	from { opacity: 0; transform: scale(0.9); }
-	to { opacity: 1; transform: scale(1); }
+	from { opacity: 0; transform: translate(-0.85px, -0.85px) scale(0.86); }
+	to { opacity: 1; transform: none; }
 }
 
-@keyframes qr-mark-in {
-	from { opacity: 0; transform: scale(0.35); }
-	to { opacity: 1; transform: scale(1); }
+@keyframes qr-glyph-in {
+	from { opacity: 0; transform: scale(0.55) translateY(0.5px); }
+	to { opacity: 1; transform: none; }
 }
 
 /* ---- Identity under the card -------------------------------------------- */
@@ -3967,12 +4008,13 @@ body.serenity-lightbox-open {
 	margin: 0;
 }
 
-.design-v2 .scan-role {
+.design-v2 #main p.scan-role {
 	color: var(--text-muted);
 	font-size: 0.94rem;
 	line-height: 1.5;
 	text-align: center;
 	text-wrap: balance;
+	margin: 0;
 }
 
 .design-v2 .scan-foot {
@@ -3999,12 +4041,14 @@ body.serenity-lightbox-open {
 	color: var(--text) !important;
 }
 
-.design-v2 .scan-hint {
+.design-v2 #main p.scan-hint {
 	font-family: var(--font-mono);
 	font-size: 0.66rem;
 	letter-spacing: 0.16em;
 	text-transform: uppercase;
 	color: var(--text-subtle);
+	margin: 0;
+	text-align: center;
 }
 
 /* ---- Print: a table tent. No chrome, no glow, maximum contrast. --------- */
@@ -4013,8 +4057,7 @@ body.serenity-lightbox-open {
 	.design-v2.page-scan .share-bar,
 	.design-v2.page-scan .scan-tick,
 	.design-v2.page-scan .scan-sweep,
-	.design-v2.page-scan .scan-hint,
-	.design-v2.page-scan #copyright {
+	.design-v2.page-scan .scan-hint {
 		display: none !important;
 	}
 
@@ -4037,9 +4080,16 @@ body.serenity-lightbox-open {
 
 	.design-v2.page-scan .qr-band,
 	.design-v2.page-scan .qr-eye,
-	.design-v2.page-scan .qr-mark {
+	.design-v2.page-scan .qr-mark,
+	.design-v2.page-scan .qr-eye-core,
+	.design-v2.page-scan .qr-mark-glyph {
 		opacity: 1 !important;
 		animation: none !important;
+	}
+
+	.design-v2.page-scan .qr-eye-ring,
+	.design-v2.page-scan .qr-mark-ring {
+		stroke-dashoffset: 0 !important;
 	}
 
 	.design-v2.page-scan .scan-frame {
@@ -4055,41 +4105,35 @@ body.serenity-lightbox-open {
 
 /* =========================================================
    /details — the profile card the QR points at
-   ========================================================= */
+   =========================================================
+   This is read standing up, in a few seconds, by someone who has just met
+   Uttam. It has to hold one screen with no scrolling, so it carries identity
+   and the two actions that matter; the vCard behind "Save contact" carries the
+   detail. Everything is centred on the portrait. */
 .design-v2 .detail-shell {
-	width: min(33rem, 100%);
-	margin: 0 auto;
+	width: 100%;
 	display: flex;
 	flex-direction: column;
-	gap: clamp(1.5rem, 4.5vw, 2.1rem);
-	padding: clamp(1.5rem, 5vw, 2.75rem) 0 clamp(1.75rem, 5vw, 2.5rem);
+	align-items: center;
+	text-align: center;
+	gap: clamp(0.7rem, 2vh, 1.15rem);
+	padding: 0;
 }
 
-.design-v2 .detail-eyebrow {
-	display: flex;
-	align-items: center;
-	gap: 0.6rem;
+/* Legacy `p`/`section` margins stack on top of the shell's flex gap and break
+   the rhythm. The shell owns its spacing. */
+.design-v2 .detail-shell > * {
 	margin: 0;
 }
 
-.design-v2 .detail-eyebrow::after {
-	content: "";
-	flex: 1 1 auto;
-	height: 1px;
-	background: linear-gradient(90deg, var(--line-strong), transparent);
-}
-
-/* ---- Identity ----------------------------------------------------------- */
-.design-v2 .detail-id {
-	display: grid;
-	grid-template-columns: auto minmax(0, 1fr);
-	align-items: center;
-	gap: clamp(1rem, 4vw, 1.35rem);
+/* One clear step between "who this is" and "what you can do". */
+.design-v2 .detail-actions {
+	margin-top: clamp(0.15rem, 1vh, 0.45rem);
 }
 
 .design-v2 .detail-avatar {
 	position: relative;
-	width: clamp(5.75rem, 25vw, 7.25rem);
+	width: clamp(6.25rem, 30vw, 8.25rem);
 	aspect-ratio: 1;
 	padding: 2px;
 	border-radius: var(--radius-lg);
@@ -4099,77 +4143,81 @@ body.serenity-lightbox-open {
 }
 
 .design-v2 .detail-avatar img {
+	/* aspect-ratio has to live on the image: with height:100% against an
+	   auto-height parent it resolved to auto and the portrait's own 3:4 ratio
+	   stretched the frame. */
+	display: block;
 	width: 100%;
-	height: 100%;
+	height: auto;
+	aspect-ratio: 1;
 	border-radius: calc(var(--radius-lg) - 2px);
 	object-fit: cover;
 	object-position: 50% 5%;
 }
 
+.design-v2 .detail-id {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.4rem;
+}
+
 .design-v2 #main .detail-name {
 	font-family: var(--font-display);
-	font-size: clamp(1.9rem, 7vw, 2.6rem);
+	font-size: clamp(2rem, 8vw, 2.7rem);
 	font-weight: 380;
 	line-height: 1;
 	letter-spacing: -0.01em;
-	margin: 0 0 0.45rem;
+	margin: 0;
 }
 
-.design-v2 .detail-title {
-	font-size: 0.9rem;
+.design-v2 #main p.detail-title {
+	font-size: clamp(0.86rem, 3.4vw, 0.95rem);
 	line-height: 1.45;
 	color: var(--text-muted);
-	margin: 0 0 0.35rem;
-	text-wrap: pretty;
+	margin: 0;
+	text-align: center;
 }
 
-.design-v2 .detail-org {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 0.4rem;
+.design-v2 #main p.detail-org {
 	font-family: var(--font-mono);
-	font-size: 0.7rem;
+	font-size: 0.68rem;
 	letter-spacing: 0.09em;
 	text-transform: uppercase;
 	color: var(--text-subtle);
 	margin: 0;
+	text-align: center;
 }
 
-.design-v2 .detail-org span + span::before {
-	content: "·";
-	margin-right: 0.4rem;
-}
-
-/* ---- Positioning line --------------------------------------------------- */
-.design-v2 #main .detail-statement {
+/* `.design-v2:not(.page-home) #main p` carries a type selector, so it
+   outranks a class-only rule here — match its specificity. */
+.design-v2 #main p.detail-statement {
 	font-family: var(--font-display);
-	font-size: clamp(1.25rem, 4.6vw, 1.55rem);
+	font-size: clamp(1.15rem, 4.6vw, 1.45rem);
 	font-weight: 380;
-	line-height: 1.28;
+	line-height: 1.3;
 	letter-spacing: -0.005em;
 	color: var(--text);
 	margin: 0;
+	max-width: 24rem;
 	text-wrap: balance;
+	text-align: center;
 }
 
-.design-v2 .detail-bio {
-	font-size: 0.95rem;
-	line-height: 1.6;
-	color: var(--text-muted);
-	margin: 0.7rem 0 0;
-}
-
-/* ---- Primary actions ---------------------------------------------------- */
 .design-v2 .detail-actions {
 	display: flex;
 	flex-wrap: wrap;
+	justify-content: center;
 	gap: 0.6rem;
+	width: 100%;
+	max-width: 23rem;
 }
 
 .design-v2 .detail-actions .button {
-	flex: 1 1 9rem;
+	flex: 1 1 0;
 	min-height: 3rem;
+	padding: 0 0.95rem;
+	white-space: nowrap;
 }
 
 .design-v2 .detail-actions .button svg {
@@ -4178,175 +4226,47 @@ body.serenity-lightbox-open {
 	flex: none;
 }
 
-/* ---- Grouped blocks ----------------------------------------------------- */
-.design-v2 .detail-group {
-	display: flex;
-	flex-direction: column;
-	gap: 0.85rem;
-}
-
-.design-v2 .detail-group-label {
-	display: flex;
-	align-items: center;
-	gap: 0.6rem;
-	margin: 0;
-}
-
-.design-v2 .detail-group-label::after {
-	content: "";
-	flex: 1 1 auto;
-	height: 1px;
-	background: linear-gradient(90deg, var(--line), transparent);
-}
-
-.design-v2 .detail-chips {
+/* The five contacts as one compact rail. Stacked rows read better on a page
+   you can scroll; this page cannot afford the height, and the vCard carries
+   the same addresses in full. */
+.design-v2 .detail-social {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.4rem;
+	justify-content: center;
+	gap: 0.55rem;
 	margin: 0;
 	padding: 0;
 	list-style: none;
 }
 
-.design-v2 .detail-chips li {
-	padding: 0.4rem 0.75rem;
-	border: 1px solid var(--line);
-	border-radius: 999px;
-	background: var(--surface);
-	font-size: 0.8rem;
-	line-height: 1.2;
-	color: var(--text-muted);
-}
-
-/* ---- Contact rows ------------------------------------------------------- */
-.design-v2 .detail-rows {
-	display: flex;
-	flex-direction: column;
-	gap: 0.4rem;
+.design-v2 .detail-social li {
 	margin: 0;
 	padding: 0;
-	list-style: none;
 }
 
-.design-v2 .detail-row {
-	display: grid;
-	grid-template-columns: 2.1rem minmax(0, 1fr) auto;
-	align-items: center;
-	gap: 0.75rem;
-	min-height: 3.25rem;
-	padding: 0.55rem 0.9rem 0.55rem 0.6rem;
-	border: 1px solid var(--line);
-	border-radius: var(--radius-md);
-	background: var(--surface);
-	text-decoration: none;
-	transition: transform 220ms var(--ease), background 180ms var(--ease-fast), border-color 180ms var(--ease-fast);
-}
-
-.design-v2 .detail-row:hover {
-	transform: translateY(-2px);
-	background: var(--surface-strong);
-	border-color: var(--line-strong);
-	color: var(--text) !important;
-}
-
-.design-v2 .detail-row-icon {
+.design-v2 .detail-social a {
 	display: inline-grid;
 	place-items: center;
-	width: 2.1rem;
-	height: 2.1rem;
-	border-radius: 0.7rem;
+	width: 2.9rem;
+	height: 2.9rem;
 	border: 1px solid var(--line);
-	background: var(--bg-elevated);
-	color: var(--accent);
-}
-
-.design-v2 .detail-row-icon svg {
-	width: 1rem;
-	height: 1rem;
-}
-
-.design-v2 .detail-row-icon.icon::before {
-	font-size: 0.88rem;
-	color: var(--accent);
-}
-
-.design-v2 .detail-row-text {
-	display: flex;
-	flex-direction: column;
-	gap: 0.1rem;
-	min-width: 0;
-}
-
-.design-v2 .detail-row-label {
-	font-family: var(--font-mono);
-	font-size: 0.62rem;
-	font-weight: 600;
-	letter-spacing: 0.15em;
-	text-transform: uppercase;
-	color: var(--text-subtle);
-}
-
-.design-v2 .detail-row-value {
-	font-size: 0.92rem;
-	color: var(--text);
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-.design-v2 .detail-row-go {
-	color: var(--text-subtle);
-	font-size: 0.95rem;
-	line-height: 1;
-	transition: transform 220ms var(--ease), color 180ms var(--ease-fast);
-}
-
-.design-v2 .detail-row:hover .detail-row-go {
-	color: var(--accent);
-	transform: translate(2px, -2px);
-}
-
-/* ---- Quick links -------------------------------------------------------- */
-.design-v2 .detail-quick {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.4rem;
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-.design-v2 .detail-quick a {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.4rem;
-	min-height: 2.75rem;
-	padding: 0.35rem 0.9rem;
-	border: 1px solid var(--line);
-	border-radius: 999px;
+	border-radius: 50%;
 	background: var(--surface);
-	font-size: 0.84rem;
-	font-weight: 550;
+	color: var(--text) !important;
 	text-decoration: none;
-	transition: transform 220ms var(--ease), background 180ms var(--ease-fast), border-color 180ms var(--ease-fast);
+	transition: transform 220ms var(--ease), background 180ms var(--ease-fast), border-color 180ms var(--ease-fast), color 180ms var(--ease-fast);
 }
 
-.design-v2 .detail-quick a:hover {
+.design-v2 .detail-social a:hover {
 	transform: translateY(-2px);
 	background: var(--surface-strong);
 	border-color: var(--line-strong);
+	color: var(--accent) !important;
 }
 
-.design-v2 .detail-quick .orb {
-	width: 0.42rem;
-	height: 0.42rem;
-	border-radius: 50%;
-	background: var(--accent-2);
-	flex: none;
-}
-
-.design-v2 .detail-quick .orb--origin {
-	background: var(--warm);
+.design-v2 .detail-social svg {
+	width: 1.05rem;
+	height: 1.05rem;
 }
 
 /* ---- "Copied" feedback -------------------------------------------------- */
@@ -4378,15 +4298,20 @@ body.serenity-lightbox-open {
 	transform: translate(-50%, 0);
 }
 
-/* ---- Explore cue: the way out of the card and into the site ------------- */
+/* ---- Explore cue: scrolling down is what carries you into the site ------ */
 .design-v2 .explore-cue {
-	position: static;
+	/* .scroll-cue is absolutely placed in the home hero with left:50% and a
+	   translate to match. Here it sits in normal flow, so both must be undone. */
+	position: relative;
+	left: auto;
+	right: auto;
+	bottom: auto;
 	display: inline-flex;
 	align-self: center;
 	flex-direction: column;
 	gap: 0.45rem;
-	margin-top: 0.4rem;
-	padding: 0.75rem 1.1rem;
+	margin-top: clamp(0.2rem, 1.5vh, 0.6rem);
+	padding: 0.75rem 1.1rem 1rem;
 	transform: none;
 	/* Paired with the home hero's .scroll-cue so the arrow survives the
 	   navigation as one continuous element (see the transition block below). */
@@ -4399,6 +4324,27 @@ body.serenity-lightbox-open {
 
 .design-v2 .explore-cue .scroll-cue-arrow {
 	font-size: 1.15rem;
+	transform: translateY(calc(var(--p, 0) * 0.35rem));
+}
+
+/* Fills as downward scroll intent accumulates, so the navigation reads as
+   something the reader did rather than something that happened to them. */
+.design-v2 .explore-cue::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	bottom: 0.25rem;
+	transform: translateX(-50%);
+	width: 3.4rem;
+	height: 2px;
+	border-radius: 2px;
+	background: linear-gradient(90deg, var(--accent) calc(var(--p, 0) * 100%), var(--line) 0);
+	opacity: calc(0.3 + var(--p, 0) * 0.7);
+	transition: opacity 180ms var(--ease-fast);
+}
+
+.design-v2 .explore-cue.is-triggering {
+	color: var(--text) !important;
 }
 
 /* =========================================================
@@ -4471,18 +4417,27 @@ html.vt-explore::view-transition-new(explore-cue) {
    ========================================================= */
 @media (prefers-reduced-motion: reduce) {
 	.design-v2 .scan-eyebrow::before,
-	.design-v2 .scan-sweep,
+	.design-v2 .scan-frame.is-live .scan-sweep,
 	.design-v2.qr-anim .scan-frame.is-live .qr-band,
-	.design-v2.qr-anim .scan-frame.is-live .qr-eye,
-	.design-v2.qr-anim .scan-frame.is-live .qr-mark {
+	.design-v2.qr-anim .scan-frame.is-live .qr-eye-ring,
+	.design-v2.qr-anim .scan-frame.is-live .qr-eye-core,
+	.design-v2.qr-anim .scan-frame.is-live .qr-mark-ring,
+	.design-v2.qr-anim .scan-frame.is-live .qr-mark-glyph {
 		animation: none !important;
 	}
 
 	.design-v2.qr-anim .scan-frame .qr-band,
 	.design-v2.qr-anim .scan-frame .qr-eye,
-	.design-v2.qr-anim .scan-frame .qr-mark {
+	.design-v2.qr-anim .scan-frame .qr-eye-core,
+	.design-v2.qr-anim .scan-frame .qr-mark,
+	.design-v2.qr-anim .scan-frame .qr-mark-glyph {
 		opacity: 1 !important;
 		transform: none !important;
+	}
+
+	.design-v2.qr-anim .qr-eye-ring,
+	.design-v2.qr-anim .qr-mark-ring {
+		stroke-dashoffset: 0 !important;
 	}
 
 	.design-v2 .scan-card,
@@ -4519,15 +4474,6 @@ html.vt-explore::view-transition-new(explore-cue) {
 		width: min(21rem, 86vw, 40svh);
 	}
 
-	.design-v2 .detail-id {
-		gap: 0.9rem;
-	}
-
-	.design-v2 .detail-row {
-		grid-template-columns: 1.95rem minmax(0, 1fr) auto;
-		gap: 0.65rem;
-		padding-right: 0.7rem;
-	}
 }
 
 /* The home hero's scroll cue is hidden below 780px, but on /details the arrow
@@ -4554,35 +4500,29 @@ html.vt-explore::view-transition-new(explore-cue) {
 }
 
 /* /details keeps that panel — it is exactly the card metaphor the page wants —
-   but narrows it to card width instead of the full content column. */
+   but narrows it to card width instead of the full content column. Like the
+   scan screen it is laid out as a column that fills the viewport exactly, so
+   the card is never cut off and there is nothing to scroll past. */
+.design-v2.page-details #wrapper {
+	min-height: 100svh;
+	display: flex;
+	flex-direction: column;
+	padding-bottom: clamp(0.5rem, 2vh, 1.25rem);
+}
+
 .design-v2.page-details #main {
-	width: min(34rem, calc(100vw - (var(--page-pad) * 2)));
-	margin-top: clamp(1.25rem, 4vw, 2.25rem);
+	width: min(29rem, calc(100vw - (var(--page-pad) * 2)));
+	/* auto margins inside the wrapper's flex column centre the card vertically
+	   while letting it stay exactly as tall as its contents */
+	margin-top: auto;
+	margin-bottom: auto;
+	padding: clamp(1.25rem, 4vw, 1.9rem) clamp(1.1rem, 3.5vw, 1.75rem);
 }
 
 .design-v2 .detail-shell {
 	width: 100%;
 }
 
-/* Legacy `section { margin: 0 0 3em }` and the paragraph margins stack on top
-   of the shell's own flex gap. The shell owns its rhythm; reset the children. */
-.design-v2 .detail-shell > *,
-.design-v2 .detail-group > * {
-	margin: 0;
-}
-
-/* On a narrow screen the role line eats the text column and pushes the name
-   away from the portrait. Stack instead, and let the name run full width. */
-@media (max-width: 480px) {
-	.design-v2 .detail-id {
-		grid-template-columns: minmax(0, 1fr);
-		gap: 1rem;
-	}
-
-	.design-v2 .detail-avatar {
-		width: 6.5rem;
-	}
-}
 
 /* /scan-me is a single screen held up at an event, so it should fill the
    viewport exactly — no half-cut footer, no stray scroll. Lay the wrapper out
@@ -4637,42 +4577,140 @@ html.vt-explore::view-transition-new(explore-cue) {
 	}
 }
 
-/* The shared footer stacks to three lines on mobile. On the scan screen that
-   is the difference between fitting and not, and there is nothing to read
-   here anyway — lay it out as one compact row. */
-.design-v2.page-scan #copyright {
-	padding: 0.5rem 0;
-	margin-top: 0.35rem;
-}
-
-.design-v2.page-scan #copyright ul {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	justify-content: center;
-	gap: 0.2rem 0.85rem;
-	margin: 0;
-	padding: 0;
-}
-
-.design-v2.page-scan #copyright ul li {
-	display: inline-block;
-	margin: 0;
-	padding: 0;
-	border-left: 0;
-}
 
 /* Legacy #main anchor rules force white text, which disappears on the light
    theme's pale surfaces. DESIGN.md's QA notes call this out: v2 needs explicit
    overrides wherever an anchor carries its own text. */
-.design-v2 .detail-quick a {
-	color: var(--text) !important;
-}
-
-.design-v2 .detail-quick a:hover {
-	color: var(--accent) !important;
-}
-
 .design-v2 .scan-url {
 	color: var(--text-subtle) !important;
+}
+
+/* Short screens (small laptops, older phones): the profile card must still be
+   one screen, so tighten the rhythm rather than let it spill. */
+@media (max-height: 800px) {
+	.design-v2 .detail-shell {
+		gap: clamp(0.45rem, 1.5vh, 0.85rem);
+	}
+
+	.design-v2 .detail-avatar {
+		width: clamp(4.75rem, 20vw, 5.75rem);
+	}
+
+	.design-v2 #main .detail-statement {
+		font-size: clamp(1.05rem, 4vw, 1.2rem);
+	}
+
+	.design-v2 .explore-cue {
+		padding: 0.5rem 1.1rem 0.85rem;
+	}
+}
+
+/* Very narrow: give the contact rail the width it needs to stay on one row. */
+@media (max-width: 380px) {
+	.design-v2.page-details #main {
+		padding-left: 0.75rem;
+		padding-right: 0.75rem;
+	}
+
+	.design-v2 .detail-social {
+		gap: 0.4rem;
+	}
+}
+
+/* Very short screens (netbooks, landscape phones): drop to the essentials. */
+@media (max-height: 660px) {
+	.design-v2 .detail-shell {
+		gap: clamp(0.4rem, 1.2vh, 0.7rem);
+	}
+
+	.design-v2 .detail-avatar {
+		width: clamp(4rem, 16vw, 4.75rem);
+	}
+
+	.design-v2 #main .detail-name {
+		font-size: clamp(1.6rem, 6vw, 2rem);
+	}
+
+	.design-v2 #main .detail-statement {
+		font-size: 1rem;
+	}
+}
+
+/* ---- The save-contact button ---------------------------------------------
+   This is the one thing a guest is meant to press, so it glows. The halo is
+   drawn with box-shadow rather than a blurred pseudo-element: a blurred box
+   would extend the layout and reintroduce horizontal overflow, a shadow costs
+   nothing. .button sets overflow:hidden for its ripple, which is why the glow
+   lives on a wrapper. */
+.design-v2 .detail-save {
+	position: relative;
+	display: flex;
+	flex: 1 1 0;
+	border-radius: 999px;
+}
+
+.design-v2 .detail-save .button {
+	width: 100%;
+}
+
+.design-v2 .detail-save::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	border-radius: 999px;
+	animation: save-glow 3.6s ease-in-out infinite;
+}
+
+@keyframes save-glow {
+	0%, 100% {
+		box-shadow:
+			0 6px 20px -8px rgba(138, 180, 255, 0.55),
+			0 0 14px -4px rgba(126, 231, 200, 0.30);
+	}
+	50% {
+		box-shadow:
+			0 10px 34px -8px rgba(138, 180, 255, 0.85),
+			0 0 24px -2px rgba(126, 231, 200, 0.50);
+	}
+}
+
+:root[data-theme="light"] .design-v2 .detail-save::after {
+	animation-name: save-glow-light;
+}
+
+@keyframes save-glow-light {
+	0%, 100% {
+		box-shadow:
+			0 6px 20px -8px rgba(36, 91, 219, 0.40),
+			0 0 14px -4px rgba(20, 125, 100, 0.22);
+	}
+	50% {
+		box-shadow:
+			0 10px 32px -8px rgba(36, 91, 219, 0.62),
+			0 0 22px -2px rgba(20, 125, 100, 0.38);
+	}
+}
+
+.design-v2 .detail-save:hover::after {
+	animation-duration: 1.8s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.design-v2 .detail-save::after {
+		animation: none !important;
+		box-shadow:
+			0 8px 26px -8px rgba(138, 180, 255, 0.6),
+			0 0 18px -4px rgba(126, 231, 200, 0.35);
+	}
+}
+
+@media (max-height: 620px) {
+	.design-v2 .detail-avatar {
+		width: clamp(3.5rem, 14vw, 4.25rem);
+	}
+
+	.design-v2 #main .detail-statement {
+		display: none;
+	}
 }

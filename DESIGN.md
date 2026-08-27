@@ -659,29 +659,46 @@ These notes capture alignment and browser issues found during the v3 implementat
 
 ## Share Surfaces: `/scan-me` and `/details` (v3.2)
 
-These two pages exist to hand a profile to someone standing in front of you: a QR shown on a screen, and the concise card it points at. Notes for anyone touching them.
+These two pages exist to hand a profile to someone standing in front of you: a QR shown on a screen, and the concise card it points at. Both are sized to exactly one screen at every supported breakpoint, neither is in the primary nav, and neither carries the site footer.
 
-- Neither path may appear in the primary nav. The QR is the way in; the `Explore more` cue at the foot of `/details` is the way onward. `scan-me` also carries `noindex` — it is a screen, not a search result. Neither is in `sitemap.xml`.
-- The QR is **pre-generated and committed**, not built at runtime. No QR library ships to the browser. To change the encoded URL or the styling, regenerate the SVG and re-inline it into `scan-me.html`; `assets/visuals/qr/uttamdeb-details-qr.svg` is the same code as a standalone file for printing.
-- Encode at error-correction level **H**. The centre monogram knocks out 9x9 modules (~7% of the symbol), which only stays safe because of the H redundancy.
-- **Do not render the dots with `<use>`.** A `<use>` shadow tree is translated by its `x`/`y`, so a `userSpaceOnUse` gradient resolves at the same local point for every instance and every dot paints the first stop. Emit real `<circle>` elements. This looked like a "the gradient is too blue" design problem and was actually this.
-- A 45-degree gradient across a square only reaches its last stop in the far corner, which is sparse in this symbol. The gradient vector is pulled inward so the warm end is actually visible.
-- **Rounded finder patterns are fine.** OpenCV's `QRCodeDetector` fails on them, but Apple Vision (the iOS camera) and ZXing (Android) both decode them at every size tested. Verify with those, not OpenCV, or you will "fix" a non-problem.
-- The QR card stays **white in both themes**. Scanning contrast should never depend on the theme, and every scanner expects dark modules on a light field.
-- The bloom hides the code's starting state only under `body.qr-anim`, which `share-cards.js` adds at runtime. Without JavaScript the QR must still render in full — it is the one thing the page exists to do.
-- `/scan-me` lays `#wrapper` out as a flex column so the stage absorbs the leftover height. Do not go back to subtracting a guessed chrome height from `100svh`; it overflowed at every breakpoint.
-- The card's ambient glow is sized (`min(136%, 90vw)`), not `inset`-ed. A percentage inset on a `78vw` frame pushed past the viewport, which widened the mobile layout viewport and stretched the fixed `.bg` layer with it.
-- `/details` reuses the content-page `#main` glass panel but narrows it to card width, so the panel *is* the card at every size.
-- Reset margins on `.detail-shell > *` and `.detail-group > *`: legacy `section { margin: 0 0 3em }` stacks on top of the shell's flex gap.
-- Anchors that carry their own text need an explicit light-mode colour. Legacy `#main` rules force white, which vanishes on the light theme — this bit `.detail-quick a` and `.scan-url`.
+### The QR
+
+- Pre-generated and committed, not built at runtime; no QR library ships to the browser. Regenerate with `assets/visuals/qr/generate-qr.py`, then paste `qr-inline.svg` over the `<svg class="qr-svg">` block in `scan-me.html`. `uttamdeb-details-qr.svg` is the same code standalone, for printing.
+- Error correction **H**. The knockout is **circular** (radius 5 modules) rather than a square, so the badge sits in a round clearing instead of a square hole; it costs about 4% of the symbol.
+- **Do not render the dots with `<use>`.** A `<use>` shadow tree is translated by its `x`/`y`, so a `userSpaceOnUse` gradient resolves at the same local point for every instance and all dots paint the first stop. Emit real `<circle>` elements. This presents as "the gradient looks too blue" and is not a colour problem.
+- A 45-degree gradient across a square only reaches its final stop in the far corner, which is sparse here, so the gradient vector is pulled inward to make the warm end visible.
+- The monogram is "UD" in **Instrument Serif Italic** — the face the site uses for its editorial accents — converted to outlines so it needs no webfont and renders identically everywhere. The transform is **baked into the path coordinates**: wrapping it in a `<g transform>` would also transform the `userSpaceOnUse` gradient.
+- **Rounded finder patterns are fine.** OpenCV's `QRCodeDetector` rejects them, but Apple Vision (the iOS camera) and ZXing (Android) decode them at every size tested, including under blur, tilt and low light. Verify with those two, not OpenCV.
+- The card stays **white in both themes**. Scanning contrast must never depend on the theme.
+- The reveal is staged: finder rings draw via `stroke-dashoffset` (`pathLength="100"` in the markup keeps the CSS simple), a diagonal sweep materialises the dot bands in its wake, and the monogram badge lands last. Bands are grouped along the top-left/bottom-right diagonal so the motion travels with the colour.
+- The starting state is applied only under `body.qr-anim`, added by `share-cards.js`. Without JavaScript the code must render complete — it is the one thing the page exists to do.
+
+### The profile card
+
+- It is read standing up in a few seconds. It carries identity plus the two actions that matter; the vCard behind "Save contact" carries the detail. Do not reintroduce long lists here — anything that forces a scroll defeats the page.
+- **"Save contact" deliberately has no `download` attribute.** GitHub Pages serves the `.vcf` as `text/x-vcard`, and a plain navigation is what makes iOS open its "Add to Contacts" sheet prefilled; `download` sends it to Files instead. Android downloads it either way and opens the importer on tap.
+- The vCard embeds a photo, folded to 75 octets per line as vCard 3.0 requires.
+- The glow on that button is a `box-shadow`, not a blurred pseudo-element: a blurred box extends the layout and reintroduces horizontal overflow. `.button` sets `overflow: hidden` for its ripple, so the glow lives on a wrapper.
+
+### Layout traps
+
+- Both pages lay `#wrapper` out as a flex column filling `100svh`. Do not go back to subtracting a guessed chrome height from `100svh`; it overflowed at every breakpoint.
+- `/details` centres its card with `auto` margins so the panel stays exactly as tall as its content, rather than stretching and leaving the content floating.
+- The scan card's ambient glow is **sized** (`min(136%, 90vw)`), not `inset`. A percentage inset on a `78vw` frame pushed past the viewport, which widened the mobile layout viewport and stretched the fixed `.bg` layer with it.
+- `.design-v2:not(.page-home) #main p` carries a type selector, so it outranks class-only rules and will quietly reimpose its margin, line-height, colour and `text-align: left` on any `<p>` here. Match its specificity with `#main p.your-class`, and set `text-align` explicitly — this is why centred copy silently rendered left-aligned.
+- The portrait's `aspect-ratio` has to live on the `<img>`. With `height: 100%` against an auto-height parent it resolves to `auto` and the photo's own ratio stretches the frame.
+- Legacy `ul li` padding widens flex items; zero it on any icon rail or the row wraps.
+- `.scroll-cue` is absolutely placed in the home hero with `left: 50%` and a matching translate. Reusing the class in normal flow means undoing both, or it lands off-screen right.
 
 ### The `/details` -> `/` transition
 
 - Cross-document view transitions build their pseudo-element tree in the **new** document, so all `::view-transition-*` styling for this navigation lives in the home page's CSS, scoped to `html.vt-explore`.
-- `index.html` adds that class in a `pagereveal` listener, only when `navigation.activation.from` is `/details`, and removes it when the transition finishes so every other navigation keeps the normal sheet drop. The listener is **in the head** because `pagereveal` fires before the first rendering opportunity and a script at the end of body can miss it.
-- The arrow is a shared element: `.explore-cue` on `/details` and `.scroll-cue` on the homepage both take `view-transition-name: explore-cue`. The homepage's is applied only under `.vt-explore`, otherwise it would split into its own group during unrelated navigations.
-- **Do not prefetch or prerender `/`.** A navigation served from the speculation cache does not reliably run the cross-document transition — the same finding already recorded in `glass-interactions.js`. `/details` instead preloads the shared portrait and loads the identical CSS/JS bundle, so the homepage renders from a warm cache without a speculation entry.
-- Playwright screenshots cannot capture a view transition (the screenshot forces a paint that bypasses the pseudo-element layer). Verify it by asserting the class is applied across frames and that the shared name resolves, not by eye through automation.
+- `index.html` adds that class in a `pagereveal` listener, only when `navigation.activation.from` is `/details`, and removes it when the transition finishes so every other navigation keeps the sheet drop. The listener is **in the head** because `pagereveal` fires before the first rendering opportunity.
+- The arrow is a shared element: `.explore-cue` and the homepage `.scroll-cue` both take `view-transition-name: explore-cue`, the homepage's only under `.vt-explore`.
+- Scrolling down at the foot of the card triggers it. Intent is accumulated from wheel and touch deltas and fills a meter before navigating, with a 600ms arm delay so momentum carried from the previous page cannot fire it. The cue stays a real link.
+- **Do not prefetch or prerender `/`.** A navigation served from the speculation cache does not reliably run the cross-document transition — the same finding recorded in `glass-interactions.js`.
+- Playwright screenshots cannot capture a view transition; the screenshot forces a paint that bypasses the pseudo-element layer. Verify by asserting the class is applied across frames, not by eye through automation.
+
 
 ## Edge Cases
 
