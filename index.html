@@ -38,6 +38,35 @@
 				}
 			})();
 		</script>
+		<script>
+			/* Arriving from /details: swap the default "sheet drop" for a rise, so
+			   pressing that page's DOWN arrow feels like the site coming up from
+			   underneath it, and let the shared "Explore more" arrow morph into the
+			   hero's scroll cue. Both are styled under html.vt-explore in
+			   design-v2.css, and the class is dropped again once the transition
+			   ends so every other navigation keeps the normal sheet drop.
+			   This lives in the head because `pagereveal` fires before the first
+			   rendering opportunity — a script at the end of body can miss it. */
+			(function () {
+				try {
+					window.addEventListener('pagereveal', function (event) {
+						if (!event.viewTransition) return;
+
+						var nav = window.navigation;
+						var from = nav && nav.activation && nav.activation.from && nav.activation.from.url;
+						if (!from || !/\/details(\.html)?\/?$/.test(new URL(from).pathname)) return;
+
+						var root = document.documentElement;
+						root.classList.add('vt-explore');
+
+						function clear() { root.classList.remove('vt-explore'); }
+						event.viewTransition.finished.then(clear, clear);
+					});
+				} catch (error) {
+					/* No Navigation API or no view transitions: plain navigation. */
+				}
+			})();
+		</script>
 		<title>Uttam Deb - Data & AI Professional</title>
 		<meta name="description" content="Uttam Deb is an Assistant Manager of Business Intelligence and Specialist AI Systems Developer at 10 Minute School, building decision systems across analytics, AI workflows, BI, and product intelligence.">
 		<meta name="author" content="Uttam Deb">
