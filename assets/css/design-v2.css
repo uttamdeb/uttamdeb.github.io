@@ -4770,3 +4770,38 @@ html.vt-explore::view-transition-new(explore-cue) {
 	}
 
 }
+
+/* While the gesture is held the cue says so. The two labels are stacked in a
+   grid cell so the swap cannot change the cue's width and nudge the layout. */
+.design-v2 .explore-labels {
+	display: grid;
+	place-items: center;
+}
+
+.design-v2 .explore-labels > * {
+	grid-area: 1 / 1;
+	transition: opacity 200ms var(--ease-fast), transform 240ms var(--ease);
+}
+
+.design-v2 .explore-label-hold {
+	opacity: 0;
+	transform: translateY(4px);
+	color: var(--accent) !important;
+	letter-spacing: 0.3em;
+}
+
+.design-v2 .explore-cue.is-holding .explore-label-idle {
+	opacity: 0;
+	transform: translateY(-4px);
+}
+
+.design-v2 .explore-cue.is-holding .explore-label-hold {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.design-v2 .explore-labels > * {
+		transition: none;
+	}
+}
