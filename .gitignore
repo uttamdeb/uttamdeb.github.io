@@ -10,3 +10,6 @@ blob-report/
 output/playwright/
 *.trace.zip
 *.har
+
+# Intermediate output of assets/visuals/qr/generate-qr.py (pasted into scan-me.html)
+assets/visuals/qr/qr-inline.svg

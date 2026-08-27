@@ -2,6 +2,19 @@ This is my personal portfolio website. Hosted on GitHub. Current Domain: uttamde
 
 Release Changelog
 
+v3.2.0 (August 27, 2026)
+1. Added a new page: /scan-me, a full-screen QR display for handing out a profile at physical events.
+2. Added a new page: /details, a concise mobile-first profile card the QR points at.
+3. Neither page appears in the primary navigation; the QR is the way in and the "Explore more" cue is the way onward.
+4. QR is a pre-generated, committed SVG (no runtime library): dot modules in the site's blue/teal/bronze accent gradient, rounded finder patterns, and a "UD" monogram knockout at error-correction level H.
+5. QR blooms outward from the monogram as it scrolls into view, and replays on tap for live sharing.
+6. QR card stays white in both themes so scanning contrast never depends on the theme.
+7. Added a downloadable QR at assets/visuals/qr/uttamdeb-details-qr.svg and print styles so /scan-me can be printed as a table tent.
+8. Added a downloadable vCard at assets/uttam-deb.vcf, including an embedded photo, for "Save contact".
+9. Added a Share action using the Web Share API with a clipboard fallback.
+10. Added a dedicated /details -> / view transition: the card lifts away while the site rises from beneath, with the down arrow morphing into the homepage scroll cue.
+11. Added assets/js/share-cards.js for the QR reveal and the share action; both pages remain fully usable without JavaScript.
+
 v3.1.0 (May 28, 2026)
 1. Added a new page: Origin Labs
 2. Enhanced TenTen page
