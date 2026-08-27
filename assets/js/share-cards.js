@@ -99,82 +99,39 @@
 		});
 	}
 
-	/* ---- /details: open the phone's own add-contact screen ---------------
-	   iOS already does the right thing: the markup links straight at a
-	   text/x-vcard file with no `download` attribute, so Safari shows its
-	   "Add to Contacts" sheet with everything filled in — no file, no detour.
+	/* ---- /details: save contact -----------------------------------------
+	   On iOS this is already the whole story: the markup links straight at a
+	   text/x-vcard file with no `download` attribute, so Safari shows its "Add
+	   to Contacts" sheet with everything filled in — no file, no detour.
 
-	   Android is the gap. Chrome downloads the .vcf and makes you tap the
-	   notification to import it. Chromium browsers do understand `intent://`
-	   URLs though, so there we swap the href for an ACTION_INSERT intent, which
-	   drops the reader straight into the contact editor with the fields
-	   prefilled. It carries no photo — that is the trade for skipping the
-	   download — and `browser_fallback_url` sends anything that cannot handle
-	   the intent back to the .vcf.
-
-	   The href in the markup is the vCard, so this is purely an upgrade: with
-	   no JavaScript, or on any platform we do not special-case, the file link
-	   is what runs. */
-	var CONTACT = {
-		name: 'Uttam Deb',
-		phone: '+8801718067555',
-		email: 'uttamdeb670@gmail.com',
-		company: '10 Minute School',
-		job_title: 'Assistant Manager of Business Intelligence and Specialist AI Systems Developer',
-		postal: 'Dhaka, Bangladesh',
-		notes: 'https://uttamdeb.com'
-	};
-
-	function androidIntentUrl(fallbackUrl) {
-		var parts = [
-			'intent://contact/#Intent',
-			'action=android.intent.action.INSERT',
-			'type=vnd.android.cursor.dir/contact'
-		];
-
-		Object.keys(CONTACT).forEach(function (key) {
-			parts.push('S.' + key + '=' + encodeURIComponent(CONTACT[key]));
-		});
-
-		parts.push('S.browser_fallback_url=' + encodeURIComponent(fallbackUrl));
-		parts.push('end');
-		return parts.join(';');
-	}
-
-	function prefersAndroidIntent() {
-		var ua = navigator.userAgent || '';
-		if (!/Android/i.test(ua)) {
-			return false;
-		}
-		/* Firefox for Android has no intent: support and would simply stall. */
-		return /Chrome|CriOS|SamsungBrowser|EdgA|OPR/i.test(ua) && !/Firefox|FxiOS/i.test(ua);
+	   Android cannot be made to do the same from a web page. Chrome only
+	   launches an intent:// whose target activity declares CATEGORY_BROWSABLE,
+	   and the contacts insert activity does not, so an ACTION_INSERT intent is
+	   silently ignored and the .vcf downloads anyway. (Tried; it does not
+	   work.) Every route out of a browser there ends at the same download, so
+	   rather than pretend otherwise we tell the reader what to do next. */
+	function isAndroid() {
+		return /Android/i.test(navigator.userAgent || '');
 	}
 
 	function setupVcard() {
 		var link = document.querySelector('[data-vcard]');
-		if (!link) {
-			return;
-		}
-
-		if (prefersAndroidIntent()) {
-			link.setAttribute('href', androidIntentUrl(link.href));
-			link.setAttribute('data-vcard-mode', 'intent');
-		}
-
 		var toast = document.querySelector('[data-toast]');
-		if (!toast) {
+		if (!link || !toast) {
 			return;
 		}
 
 		var timer = null;
 		link.addEventListener('click', function () {
 			/* The browser hands the card to the OS; the last step is theirs. */
-			toast.textContent = 'Confirm to add the contact';
+			toast.textContent = isAndroid()
+				? 'Open the downloaded card to add the contact'
+				: 'Confirm to add the contact';
 			toast.classList.add('is-shown');
 			window.clearTimeout(timer);
 			timer = window.setTimeout(function () {
 				toast.classList.remove('is-shown');
-			}, 3600);
+			}, isAndroid() ? 5200 : 3600);
 		});
 	}
 
@@ -262,6 +219,8 @@
 
 		function render() {
 			cue.style.setProperty('--p', (intent / THRESHOLD).toFixed(3));
+			/* swap the label to "Hold" as soon as the gesture is under way */
+			cue.classList.toggle('is-holding', intent > THRESHOLD * 0.06);
 		}
 
 		function decay() {
