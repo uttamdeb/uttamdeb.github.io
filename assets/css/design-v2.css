@@ -4832,11 +4832,15 @@ html.vt-explore::view-transition-new(explore-cue) {
 	align-items: center;
 	gap: 0.4rem;
 	min-height: 2.75rem;
-	margin-top: -0.35rem;
+	margin-top: 0.15rem;
 	padding: 0 0.65rem;
 	border: 0;
 	border-radius: 999px;
 	background: transparent;
+	/* The legacy theme rings every <button> with an inset box-shadow. This is a
+	   quiet tertiary control, not a boxed button — clear it, and keep the 44px
+	   tap target as invisible padding instead. */
+	box-shadow: none;
 	color: var(--text-subtle) !important;
 	font-family: var(--font-mono);
 	font-size: 0.66rem;
