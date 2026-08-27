@@ -3,17 +3,19 @@ This is my personal portfolio website. Hosted on GitHub. Current Domain: uttamde
 Release Changelog
 
 v3.2.0 (August 27, 2026)
-1. Added a new page: /scan-me, a full-screen QR display for handing out a profile at physical events.
-2. Added a new page: /details, a concise mobile-first profile card the QR points at.
-3. Neither page appears in the primary navigation; the QR is the way in and the "Explore more" cue is the way onward.
-4. QR is a pre-generated, committed SVG (no runtime library): dot modules in the site's blue/teal/bronze accent gradient, rounded finder patterns, and a "UD" monogram knockout at error-correction level H.
-5. QR blooms outward from the monogram as it scrolls into view, and replays on tap for live sharing.
+1. Added a new page: /scan-me, a full-screen QR display for sharing a profile at physical events.
+2. Added a new page: /details, a concise profile card the QR points at, sized to one screen with no scrolling.
+3. Neither page appears in the primary navigation, and neither carries the site footer.
+4. QR is a pre-generated, committed SVG with no runtime library: dot modules in the site's blue/teal/bronze accent gradient, rounded finder patterns, and a circular badge holding a "UD" monogram set in Instrument Serif Italic and converted to outlines.
+5. QR reveal is staged: the three finder rings draw themselves, a diagonal light sweep materialises the dot bands in its wake, and the monogram lands last. Replays on tap for live sharing.
 6. QR card stays white in both themes so scanning contrast never depends on the theme.
-7. Added a downloadable QR at assets/visuals/qr/uttamdeb-details-qr.svg and print styles so /scan-me can be printed as a table tent.
-8. Added a downloadable vCard at assets/uttam-deb.vcf, including an embedded photo, for "Save contact".
-9. Added a Share action using the Web Share API with a clipboard fallback.
-10. Added a dedicated /details -> / view transition: the card lifts away while the site rises from beneath, with the down arrow morphing into the homepage scroll cue.
-11. Added assets/js/share-cards.js for the QR reveal and the share action; both pages remain fully usable without JavaScript.
+7. Added a downloadable QR at assets/visuals/qr/uttamdeb-details-qr.svg, its generator, and print styles so /scan-me can be printed as a table tent.
+8. /details leads with a centred portrait, name, role, and one positioning line, then the two actions that matter and a compact rail of five contacts.
+9. "Save contact" glows, and opens the phone's own add-contact sheet with every field prefilled from assets/uttam-deb.vcf, including a photo. The vCard link deliberately omits `download` so iOS opens Contacts rather than Files.
+10. "Share" uses the Web Share API with a clipboard fallback.
+11. Scrolling down at the foot of /details carries you into the site: downward intent fills a small meter, then navigates. The cue remains a real link for clicking and keyboard use.
+12. That navigation runs a dedicated transition, the card lifting away while the site rises from beneath, with the arrow morphing into the homepage scroll cue.
+13. Added assets/js/share-cards.js. Both pages remain fully usable without JavaScript.
 
 v3.1.0 (May 28, 2026)
 1. Added a new page: Origin Labs
