@@ -12,4 +12,5 @@ output/playwright/
 *.har
 
 # Intermediate output of assets/visuals/qr/generate-qr.py (pasted into scan-me.html)
-assets/visuals/qr/qr-inline.svg
+assets/visuals/qr/qr-inline-page.svg
+assets/visuals/qr/qr-inline-contact.svg
