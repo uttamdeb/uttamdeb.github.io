@@ -650,7 +650,7 @@ These notes capture alignment and browser issues found during the v3 implementat
 - Treat the whole redesign QA pass as `v3.0.0` in public footers and `README.txt` unless a separate release is explicitly created.
 - The current greeting script uses `is-entering` and `is-leaving`; keep matching CSS animation states so multilingual greetings visibly rotate.
 - The homepage includes an optional `Explore serenity` section after the closing CTA and before the footer. It uses Nepal photos from `assets/visuals/` as a personal visual pause, not as part of the professional work narrative.
-- Browser titles for redesigned public pages should use the exact title `Uttam Deb - Data & AI Professional`.
+- Browser titles use `Uttam Deb - Data & AI Professional | Section`, e.g. `| TenTen`, `| Work`, `| Resumé`. The homepage keeps the bare title with no suffix. `legacy-home.html` is a rollback snapshot and `elements.html` is an untouched template reference; leave both alone.
 - The TenTen page is a product-and-engineering story, not a copied design case study. It should emphasize retrieval, semantic search, memory, agentic workflows, product analytics, evaluation loops, and launch impact.
 - TenTen visuals and provider logos must be stored locally in the repo under `assets/visuals/tenten/` and `assets/visuals/brand-logos/` so the page does not depend on external case-study image hosting.
 - The TenTen page should close with a concise learning-product CTA before the footer, using the same large editorial display style and warm italic emphasis as the homepage.
@@ -672,6 +672,18 @@ These two pages exist to hand a profile to someone standing in front of you: a Q
 - The card stays **white in both themes**. Scanning contrast must never depend on the theme.
 - The reveal is staged: finder rings draw via `stroke-dashoffset` (`pathLength="100"` in the markup keeps the CSS simple), a diagonal sweep materialises the dot bands in its wake, and the monogram badge lands last. Bands are grouped along the top-left/bottom-right diagonal so the motion travels with the colour.
 - The starting state is applied only under `body.qr-anim`, added by `share-cards.js`. Without JavaScript the code must render complete — it is the one thing the page exists to do.
+
+### The offline fallback code
+
+- `/scan-me` shows **one** code. The default is the page link and is the main experience — it must not change without a very good reason. The fallback is a quiet control under the card that swaps the payload in place.
+- **A single URL code cannot serve an offline reader.** Their phone never reaches the site, so nothing of ours runs and nothing can detect their state. The payload has to change, which is why this is a deliberate tap rather than an automatic swap.
+- Auto-detection was considered and rejected: `navigator.onLine` reports true behind captive portals, so it would sometimes swap the code for a reader who *does* have a connection — breaking the main path to serve the edge case.
+- **Give each code its own gradient id.** Both fragments live in one document, so a shared `id="g"` makes the second code resolve the first one's gradient, which is sized for a different viewBox.
+- The monogram is baked per viewBox; each code has its own path constant, sized so the badge covers the same fraction of both symbols.
+- The contact payload is deliberately lean — a QR tops out near 3KB and the full vCard is 29KB with its photo. `TITLE:BI & AI Systems Developer` is the longest title that still fits in 77 modules; the full title costs four more versions.
+- Inlining both is required, not a choice: lazy-loading the second would need a connection, which is the whole thing it exists to survive. 105KB raw, but ~9KB gzipped.
+- A `display` declaration outranks the UA's `[hidden] { display: none }`, so every element toggled by that attribute needs its own `[hidden]` guard.
+- Both codes are verified against Apple Vision and ZXing. The denser contact code actually decodes *more* robustly, since more modules give the detector more to lock onto.
 
 ### The profile card
 
