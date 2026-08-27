@@ -3703,3 +3703,976 @@ body.serenity-lightbox-open {
 	content-visibility: auto;
 	contain-intrinsic-size: auto 640px;
 }
+
+/* =========================================================
+   v3.2 — Share surfaces: /scan-me and /details
+   =========================================================
+   Two pages built to be handed out in person: a QR shown on a screen at an
+   event, and the concise profile card it points at. Both are deliberately
+   absent from the primary nav — the way in is the QR (or a direct link), and
+   the way onward is the "Explore more" cue at the foot of /details. They reuse
+   the v2 tokens and shell so they cannot drift from the rest of the site. */
+
+/* ---- Minimal shell: wordmark + theme toggle, no nav links ---------------- */
+.design-v2 .share-bar {
+	position: relative;
+	z-index: 5;
+	width: min(var(--max), calc(100vw - (var(--page-pad) * 2)));
+	margin: 1.15rem auto 0;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.design-v2 .share-wordmark {
+	display: inline-flex;
+	align-items: center;
+	min-height: 2.75rem;
+	font-family: var(--font-display);
+	font-size: 1.1rem;
+	font-weight: 500;
+	letter-spacing: -0.01em;
+	color: var(--text);
+	text-decoration: none;
+	opacity: 0.88;
+}
+
+.design-v2 .share-wordmark:hover {
+	opacity: 1;
+}
+
+.design-v2 #main.share-main {
+	margin-top: 0;
+}
+
+/* =========================================================
+   /scan-me
+   ========================================================= */
+.design-v2 .scan-stage {
+	min-height: calc(100svh - 6.5rem);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: clamp(1.25rem, 3.4vw, 2rem);
+	padding: clamp(1.25rem, 4vw, 2.5rem) 0 clamp(2rem, 5vw, 3rem);
+	text-align: center;
+}
+
+.design-v2 .scan-eyebrow {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.55rem;
+	margin: 0;
+}
+
+.design-v2 .scan-eyebrow::before {
+	content: "";
+	width: 0.42rem;
+	height: 0.42rem;
+	border-radius: 50%;
+	background: var(--accent-2);
+	box-shadow: 0 0 0 0 rgba(126, 231, 200, 0.5);
+	animation: scan-pulse 2.6s ease-out infinite;
+}
+
+@keyframes scan-pulse {
+	0% { box-shadow: 0 0 0 0 rgba(126, 231, 200, 0.45); }
+	70% { box-shadow: 0 0 0 0.7rem rgba(126, 231, 200, 0); }
+	100% { box-shadow: 0 0 0 0 rgba(126, 231, 200, 0); }
+}
+
+/* The framed area: white card plus the four viewfinder ticks around it. */
+.design-v2 .scan-frame {
+	position: relative;
+	/* Height matters as much as width here: on a short laptop screen a
+	   width-only cap pushed the identity and footer off the bottom. */
+	width: min(23rem, 78vw, 40svh);
+	padding: clamp(0.85rem, 3.2vw, 1.5rem);
+}
+
+/* Ambient light behind the card so it reads as lit, not pasted on. */
+.design-v2 .scan-frame::before {
+	content: "";
+	position: absolute;
+	z-index: 0;
+	/* Sized rather than inset: a percentage inset on a frame that is already
+	   78vw wide pushed the glow past the viewport, which widened the mobile
+	   layout viewport and stretched the fixed .bg layer with it. The 90vw cap
+	   keeps the glow inside the content column at every width. */
+	left: 50%;
+	top: 50%;
+	width: min(136%, 90vw);
+	height: 136%;
+	transform: translate(-50%, -50%);
+	border-radius: 50%;
+	background:
+		radial-gradient(closest-side, rgba(36, 91, 219, 0.34), transparent 72%),
+		radial-gradient(closest-side at 70% 78%, rgba(20, 125, 100, 0.22), transparent 70%);
+	filter: blur(6px);
+	opacity: 0;
+	transition: opacity 900ms var(--ease);
+	pointer-events: none;
+}
+
+.design-v2 .scan-frame.is-live::before {
+	opacity: 1;
+}
+
+.design-v2 .scan-tick {
+	position: absolute;
+	width: 1.35rem;
+	height: 1.35rem;
+	border: 2px solid var(--accent);
+	border-radius: 0.28rem;
+	opacity: 0;
+	transform: scale(0.6);
+	transition: opacity 520ms var(--ease), transform 520ms var(--ease);
+	pointer-events: none;
+}
+
+.design-v2 .scan-frame.is-live .scan-tick {
+	opacity: 0.62;
+	transform: scale(1);
+}
+
+.design-v2 .scan-tick--tl { top: 0; left: 0; border-right: 0; border-bottom: 0; transition-delay: 60ms; }
+.design-v2 .scan-tick--tr { top: 0; right: 0; border-left: 0; border-bottom: 0; transition-delay: 130ms; }
+.design-v2 .scan-tick--bl { bottom: 0; left: 0; border-right: 0; border-top: 0; transition-delay: 200ms; }
+.design-v2 .scan-tick--br { bottom: 0; right: 0; border-left: 0; border-top: 0; transition-delay: 270ms; }
+
+/* The card stays white in both themes: a QR is only as good as its contrast,
+   and every scanner in the world expects dark modules on a light field. */
+.design-v2 .scan-card {
+	position: relative;
+	z-index: 1;
+	display: block;
+	width: 100%;
+	padding: clamp(0.8rem, 3vw, 1.15rem);
+	background: #ffffff;
+	border-radius: clamp(1.15rem, 4.5vw, 1.75rem);
+	box-shadow:
+		0 28px 70px rgba(0, 0, 0, 0.42),
+		0 2px 5px rgba(0, 0, 0, 0.18),
+		0 0 0 1px rgba(255, 255, 255, 0.08);
+	overflow: hidden;
+	cursor: pointer;
+	opacity: 0;
+	transform: translateY(16px) scale(0.965);
+	transition: opacity 620ms var(--ease), transform 620ms var(--ease), box-shadow 260ms var(--ease-fast);
+}
+
+.design-v2 .scan-frame.is-live .scan-card {
+	opacity: 1;
+	transform: none;
+}
+
+.design-v2 .scan-card:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 4px;
+}
+
+.design-v2 .scan-card .qr-svg {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+/* A slow shine crossing the code — reads as "live", and at this opacity it is
+   far gentler than the screen glare any scanner already copes with. */
+.design-v2 .scan-sweep {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	height: 34%;
+	background: linear-gradient(180deg, rgba(36, 91, 219, 0) 0%, rgba(36, 91, 219, 0.13) 45%, rgba(20, 125, 100, 0.1) 60%, rgba(36, 91, 219, 0) 100%);
+	opacity: 0;
+	pointer-events: none;
+}
+
+.design-v2 .scan-frame.is-live .scan-sweep {
+	animation: scan-sweep 5.2s cubic-bezier(0.5, 0, 0.5, 1) 1.65s infinite;
+}
+
+@keyframes scan-sweep {
+	0% { transform: translateY(-110%); opacity: 0; }
+	8% { opacity: 1; }
+	38% { opacity: 1; }
+	46% { transform: translateY(320%); opacity: 0; }
+	100% { transform: translateY(320%); opacity: 0; }
+}
+
+/* ---- QR bloom: rings materialise outward from the monogram -------------- */
+.design-v2 .qr-band,
+.design-v2 .qr-eye,
+.design-v2 .qr-mark {
+	transform-box: view-box;
+	transform-origin: 50% 50%;
+}
+
+/* Hidden only once the enhancement script is present, so a QR still renders
+   in full when JavaScript never runs. */
+.design-v2.qr-anim .scan-frame:not(.is-live) .qr-band,
+.design-v2.qr-anim .scan-frame:not(.is-live) .qr-eye,
+.design-v2.qr-anim .scan-frame:not(.is-live) .qr-mark {
+	opacity: 0;
+}
+
+.design-v2.qr-anim .scan-frame.is-live .qr-eye {
+	animation: qr-eye-in 520ms var(--ease) both;
+	animation-delay: calc(120ms + var(--i) * 80ms);
+}
+
+.design-v2.qr-anim .scan-frame.is-live .qr-band {
+	animation: qr-band-in 540ms var(--ease) both;
+	animation-delay: calc(300ms + var(--i) * 32ms);
+}
+
+.design-v2.qr-anim .scan-frame.is-live .qr-mark {
+	animation: qr-mark-in 620ms cubic-bezier(0.34, 1.46, 0.64, 1) 820ms both;
+	transform-box: fill-box;
+}
+
+@keyframes qr-eye-in {
+	from { opacity: 0; transform: scale(0.55); }
+	to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes qr-band-in {
+	from { opacity: 0; transform: scale(0.9); }
+	to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes qr-mark-in {
+	from { opacity: 0; transform: scale(0.35); }
+	to { opacity: 1; transform: scale(1); }
+}
+
+/* ---- Identity under the card -------------------------------------------- */
+.design-v2 .scan-identity {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.3rem;
+	max-width: 30rem;
+}
+
+.design-v2 #main .scan-name {
+	font-family: var(--font-display);
+	font-size: clamp(1.75rem, 5.4vw, 2.4rem);
+	font-weight: 380;
+	line-height: 1.05;
+	margin: 0;
+}
+
+.design-v2 .scan-role {
+	color: var(--text-muted);
+	font-size: 0.94rem;
+	line-height: 1.5;
+	text-align: center;
+	text-wrap: balance;
+}
+
+.design-v2 .scan-foot {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.55rem;
+}
+
+.design-v2 .scan-url {
+	display: inline-flex;
+	align-items: center;
+	min-height: 2.75rem;
+	padding: 0 0.5rem;
+	font-family: var(--font-mono);
+	font-size: 0.74rem;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--text-subtle);
+	text-decoration: none;
+}
+
+.design-v2 .scan-url:hover {
+	color: var(--text) !important;
+}
+
+.design-v2 .scan-hint {
+	font-family: var(--font-mono);
+	font-size: 0.66rem;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--text-subtle);
+}
+
+/* ---- Print: a table tent. No chrome, no glow, maximum contrast. --------- */
+@media print {
+	.design-v2.page-scan #wrapper > .bg,
+	.design-v2.page-scan .share-bar,
+	.design-v2.page-scan .scan-tick,
+	.design-v2.page-scan .scan-sweep,
+	.design-v2.page-scan .scan-hint,
+	.design-v2.page-scan #copyright {
+		display: none !important;
+	}
+
+	.design-v2.page-scan,
+	.design-v2.page-scan #wrapper {
+		background: #ffffff !important;
+		color: #111111 !important;
+	}
+
+	.design-v2.page-scan .scan-frame::before {
+		display: none !important;
+	}
+
+	.design-v2.page-scan .scan-card {
+		box-shadow: none !important;
+		border: 1px solid #d8d8d8;
+		opacity: 1 !important;
+		transform: none !important;
+	}
+
+	.design-v2.page-scan .qr-band,
+	.design-v2.page-scan .qr-eye,
+	.design-v2.page-scan .qr-mark {
+		opacity: 1 !important;
+		animation: none !important;
+	}
+
+	.design-v2.page-scan .scan-frame {
+		width: 15cm;
+	}
+
+	.design-v2.page-scan #main .scan-name,
+	.design-v2.page-scan .scan-role,
+	.design-v2.page-scan .scan-url {
+		color: #111111 !important;
+	}
+}
+
+/* =========================================================
+   /details — the profile card the QR points at
+   ========================================================= */
+.design-v2 .detail-shell {
+	width: min(33rem, 100%);
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	gap: clamp(1.5rem, 4.5vw, 2.1rem);
+	padding: clamp(1.5rem, 5vw, 2.75rem) 0 clamp(1.75rem, 5vw, 2.5rem);
+}
+
+.design-v2 .detail-eyebrow {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	margin: 0;
+}
+
+.design-v2 .detail-eyebrow::after {
+	content: "";
+	flex: 1 1 auto;
+	height: 1px;
+	background: linear-gradient(90deg, var(--line-strong), transparent);
+}
+
+/* ---- Identity ----------------------------------------------------------- */
+.design-v2 .detail-id {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	align-items: center;
+	gap: clamp(1rem, 4vw, 1.35rem);
+}
+
+.design-v2 .detail-avatar {
+	position: relative;
+	width: clamp(5.75rem, 25vw, 7.25rem);
+	aspect-ratio: 1;
+	padding: 2px;
+	border-radius: var(--radius-lg);
+	background: linear-gradient(145deg, var(--accent), var(--accent-2) 52%, var(--warm));
+	box-shadow: var(--shadow-soft);
+	flex: none;
+}
+
+.design-v2 .detail-avatar img {
+	width: 100%;
+	height: 100%;
+	border-radius: calc(var(--radius-lg) - 2px);
+	object-fit: cover;
+	object-position: 50% 5%;
+}
+
+.design-v2 #main .detail-name {
+	font-family: var(--font-display);
+	font-size: clamp(1.9rem, 7vw, 2.6rem);
+	font-weight: 380;
+	line-height: 1;
+	letter-spacing: -0.01em;
+	margin: 0 0 0.45rem;
+}
+
+.design-v2 .detail-title {
+	font-size: 0.9rem;
+	line-height: 1.45;
+	color: var(--text-muted);
+	margin: 0 0 0.35rem;
+	text-wrap: pretty;
+}
+
+.design-v2 .detail-org {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.4rem;
+	font-family: var(--font-mono);
+	font-size: 0.7rem;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+	color: var(--text-subtle);
+	margin: 0;
+}
+
+.design-v2 .detail-org span + span::before {
+	content: "·";
+	margin-right: 0.4rem;
+}
+
+/* ---- Positioning line --------------------------------------------------- */
+.design-v2 #main .detail-statement {
+	font-family: var(--font-display);
+	font-size: clamp(1.25rem, 4.6vw, 1.55rem);
+	font-weight: 380;
+	line-height: 1.28;
+	letter-spacing: -0.005em;
+	color: var(--text);
+	margin: 0;
+	text-wrap: balance;
+}
+
+.design-v2 .detail-bio {
+	font-size: 0.95rem;
+	line-height: 1.6;
+	color: var(--text-muted);
+	margin: 0.7rem 0 0;
+}
+
+/* ---- Primary actions ---------------------------------------------------- */
+.design-v2 .detail-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem;
+}
+
+.design-v2 .detail-actions .button {
+	flex: 1 1 9rem;
+	min-height: 3rem;
+}
+
+.design-v2 .detail-actions .button svg {
+	width: 1rem;
+	height: 1rem;
+	flex: none;
+}
+
+/* ---- Grouped blocks ----------------------------------------------------- */
+.design-v2 .detail-group {
+	display: flex;
+	flex-direction: column;
+	gap: 0.85rem;
+}
+
+.design-v2 .detail-group-label {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	margin: 0;
+}
+
+.design-v2 .detail-group-label::after {
+	content: "";
+	flex: 1 1 auto;
+	height: 1px;
+	background: linear-gradient(90deg, var(--line), transparent);
+}
+
+.design-v2 .detail-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.design-v2 .detail-chips li {
+	padding: 0.4rem 0.75rem;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	background: var(--surface);
+	font-size: 0.8rem;
+	line-height: 1.2;
+	color: var(--text-muted);
+}
+
+/* ---- Contact rows ------------------------------------------------------- */
+.design-v2 .detail-rows {
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.design-v2 .detail-row {
+	display: grid;
+	grid-template-columns: 2.1rem minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 0.75rem;
+	min-height: 3.25rem;
+	padding: 0.55rem 0.9rem 0.55rem 0.6rem;
+	border: 1px solid var(--line);
+	border-radius: var(--radius-md);
+	background: var(--surface);
+	text-decoration: none;
+	transition: transform 220ms var(--ease), background 180ms var(--ease-fast), border-color 180ms var(--ease-fast);
+}
+
+.design-v2 .detail-row:hover {
+	transform: translateY(-2px);
+	background: var(--surface-strong);
+	border-color: var(--line-strong);
+	color: var(--text) !important;
+}
+
+.design-v2 .detail-row-icon {
+	display: inline-grid;
+	place-items: center;
+	width: 2.1rem;
+	height: 2.1rem;
+	border-radius: 0.7rem;
+	border: 1px solid var(--line);
+	background: var(--bg-elevated);
+	color: var(--accent);
+}
+
+.design-v2 .detail-row-icon svg {
+	width: 1rem;
+	height: 1rem;
+}
+
+.design-v2 .detail-row-icon.icon::before {
+	font-size: 0.88rem;
+	color: var(--accent);
+}
+
+.design-v2 .detail-row-text {
+	display: flex;
+	flex-direction: column;
+	gap: 0.1rem;
+	min-width: 0;
+}
+
+.design-v2 .detail-row-label {
+	font-family: var(--font-mono);
+	font-size: 0.62rem;
+	font-weight: 600;
+	letter-spacing: 0.15em;
+	text-transform: uppercase;
+	color: var(--text-subtle);
+}
+
+.design-v2 .detail-row-value {
+	font-size: 0.92rem;
+	color: var(--text);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.design-v2 .detail-row-go {
+	color: var(--text-subtle);
+	font-size: 0.95rem;
+	line-height: 1;
+	transition: transform 220ms var(--ease), color 180ms var(--ease-fast);
+}
+
+.design-v2 .detail-row:hover .detail-row-go {
+	color: var(--accent);
+	transform: translate(2px, -2px);
+}
+
+/* ---- Quick links -------------------------------------------------------- */
+.design-v2 .detail-quick {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.design-v2 .detail-quick a {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	min-height: 2.75rem;
+	padding: 0.35rem 0.9rem;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	background: var(--surface);
+	font-size: 0.84rem;
+	font-weight: 550;
+	text-decoration: none;
+	transition: transform 220ms var(--ease), background 180ms var(--ease-fast), border-color 180ms var(--ease-fast);
+}
+
+.design-v2 .detail-quick a:hover {
+	transform: translateY(-2px);
+	background: var(--surface-strong);
+	border-color: var(--line-strong);
+}
+
+.design-v2 .detail-quick .orb {
+	width: 0.42rem;
+	height: 0.42rem;
+	border-radius: 50%;
+	background: var(--accent-2);
+	flex: none;
+}
+
+.design-v2 .detail-quick .orb--origin {
+	background: var(--warm);
+}
+
+/* ---- "Copied" feedback -------------------------------------------------- */
+.design-v2 .detail-toast {
+	position: fixed;
+	left: 50%;
+	bottom: 1.6rem;
+	z-index: 9999;
+	padding: 0.6rem 1.1rem;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	background: var(--surface-solid);
+	box-shadow: var(--shadow-strong);
+	backdrop-filter: blur(18px) saturate(150%);
+	-webkit-backdrop-filter: blur(18px) saturate(150%);
+	color: var(--text);
+	font-family: var(--font-mono);
+	font-size: 0.72rem;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	opacity: 0;
+	transform: translate(-50%, 0.75rem);
+	transition: opacity 260ms var(--ease-fast), transform 260ms var(--ease);
+	pointer-events: none;
+}
+
+.design-v2 .detail-toast.is-shown {
+	opacity: 1;
+	transform: translate(-50%, 0);
+}
+
+/* ---- Explore cue: the way out of the card and into the site ------------- */
+.design-v2 .explore-cue {
+	position: static;
+	display: inline-flex;
+	align-self: center;
+	flex-direction: column;
+	gap: 0.45rem;
+	margin-top: 0.4rem;
+	padding: 0.75rem 1.1rem;
+	transform: none;
+	/* Paired with the home hero's .scroll-cue so the arrow survives the
+	   navigation as one continuous element (see the transition block below). */
+	view-transition-name: explore-cue;
+}
+
+.design-v2 .explore-cue:hover {
+	transform: translateY(2px);
+}
+
+.design-v2 .explore-cue .scroll-cue-arrow {
+	font-size: 1.15rem;
+}
+
+/* =========================================================
+   /details -> / : the "explore" transition
+   =========================================================
+   The default site transition is a sheet dropping in from above. Pressing a
+   DOWN arrow should do the opposite: the card lifts away and the site rises
+   from beneath it, the way scrolling onward would feel.
+
+   Cross-document view transitions build their pseudo-element tree in the NEW
+   document, so everything here is scoped to html.vt-explore — a class the home
+   page adds in `pagereveal` only when it was reached from /details, and drops
+   again once the transition finishes. Every other navigation keeps the sheet
+   drop untouched. */
+html.vt-explore::view-transition-old(root) {
+	z-index: 2;
+	animation-name: pagefx-lift;
+	animation-duration: 520ms;
+}
+
+html.vt-explore::view-transition-new(root) {
+	z-index: 1;
+	animation-name: pagefx-rise;
+	animation-duration: 620ms;
+}
+
+@keyframes pagefx-lift {
+	from { transform: translateY(0) scale(1); opacity: 1; }
+	to { transform: translateY(-16%) scale(0.97); opacity: 0; }
+}
+
+@keyframes pagefx-rise {
+	from { transform: translateY(9%) scale(0.99); }
+	to { transform: translateY(0) scale(1); }
+}
+
+/* /details has no nav bar, so the home nav is an enter-only group here. The
+   base rule pins it with `animation: none`, which would snap it into place
+   before its page arrived — let it settle in instead. */
+html.vt-explore::view-transition-new(site-nav) {
+	animation: pagefx-nav-in 460ms var(--ease) 140ms both;
+	opacity: 1;
+}
+
+@keyframes pagefx-nav-in {
+	from { opacity: 0; transform: translateY(-14px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+/* The arrow itself is the anchor: it is the one thing that does not change,
+   so the two pages read as one continuous surface moving past it. */
+html.vt-explore .scroll-cue {
+	view-transition-name: explore-cue;
+}
+
+html.vt-explore::view-transition-group(explore-cue) {
+	z-index: 60;
+	animation-duration: 620ms;
+	animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.vt-explore::view-transition-old(explore-cue),
+html.vt-explore::view-transition-new(explore-cue) {
+	animation-duration: 620ms;
+	animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* =========================================================
+   Reduced motion — v3.2 surfaces
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+	.design-v2 .scan-eyebrow::before,
+	.design-v2 .scan-sweep,
+	.design-v2.qr-anim .scan-frame.is-live .qr-band,
+	.design-v2.qr-anim .scan-frame.is-live .qr-eye,
+	.design-v2.qr-anim .scan-frame.is-live .qr-mark {
+		animation: none !important;
+	}
+
+	.design-v2.qr-anim .scan-frame .qr-band,
+	.design-v2.qr-anim .scan-frame .qr-eye,
+	.design-v2.qr-anim .scan-frame .qr-mark {
+		opacity: 1 !important;
+		transform: none !important;
+	}
+
+	.design-v2 .scan-card,
+	.design-v2 .scan-tick {
+		opacity: 1 !important;
+		transform: none !important;
+		transition: none !important;
+	}
+
+	.design-v2 .scan-tick {
+		opacity: 0.62 !important;
+	}
+
+	.design-v2 .scan-frame::before {
+		opacity: 1 !important;
+		transition: none !important;
+	}
+
+	.design-v2 .explore-cue .scroll-cue-arrow {
+		animation: none !important;
+	}
+}
+
+/* =========================================================
+   Narrow screens — v3.2 surfaces
+   ========================================================= */
+@media (max-width: 480px) {
+	.design-v2 .scan-stage {
+		gap: 1.1rem;
+		min-height: calc(100svh - 5.5rem);
+	}
+
+	.design-v2 .scan-frame {
+		width: min(21rem, 86vw, 40svh);
+	}
+
+	.design-v2 .detail-id {
+		gap: 0.9rem;
+	}
+
+	.design-v2 .detail-row {
+		grid-template-columns: 1.95rem minmax(0, 1fr) auto;
+		gap: 0.65rem;
+		padding-right: 0.7rem;
+	}
+}
+
+/* The home hero's scroll cue is hidden below 780px, but on /details the arrow
+   IS the navigation — it has to stay. Declared after that rule so it wins. */
+.design-v2 .explore-cue {
+	display: inline-flex;
+}
+
+/* =========================================================
+   v3.2 — shell corrections against the legacy cascade
+   ========================================================= */
+
+/* Content pages wrap #main in a glass panel. /scan-me is a full-bleed stage,
+   so it opts out the same way the TenTen and Origin Labs stories do. */
+.design-v2.page-scan #main {
+	margin-top: 0;
+	padding: 0;
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+}
+
+/* /details keeps that panel — it is exactly the card metaphor the page wants —
+   but narrows it to card width instead of the full content column. */
+.design-v2.page-details #main {
+	width: min(34rem, calc(100vw - (var(--page-pad) * 2)));
+	margin-top: clamp(1.25rem, 4vw, 2.25rem);
+}
+
+.design-v2 .detail-shell {
+	width: 100%;
+}
+
+/* Legacy `section { margin: 0 0 3em }` and the paragraph margins stack on top
+   of the shell's own flex gap. The shell owns its rhythm; reset the children. */
+.design-v2 .detail-shell > *,
+.design-v2 .detail-group > * {
+	margin: 0;
+}
+
+/* On a narrow screen the role line eats the text column and pushes the name
+   away from the portrait. Stack instead, and let the name run full width. */
+@media (max-width: 480px) {
+	.design-v2 .detail-id {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 1rem;
+	}
+
+	.design-v2 .detail-avatar {
+		width: 6.5rem;
+	}
+}
+
+/* /scan-me is a single screen held up at an event, so it should fill the
+   viewport exactly — no half-cut footer, no stray scroll. Lay the wrapper out
+   as a column and let the stage absorb whatever is left between the bar and
+   the copyright, instead of guessing the chrome height with a subtraction. */
+.design-v2.page-scan #wrapper {
+	min-height: 100svh;
+	display: flex;
+	flex-direction: column;
+	padding-bottom: 1.25rem;
+}
+
+.design-v2.page-scan #main.share-main {
+	flex: 1 1 auto;
+	display: flex;
+}
+
+.design-v2.page-scan .scan-stage {
+	flex: 1 1 auto;
+	width: 100%;
+	min-height: 0;
+}
+
+/* Short viewports (small laptops, landscape phones): tighten the rhythm so the
+   whole card still fits on one screen. */
+@media (max-height: 820px) {
+	.design-v2 .scan-stage {
+		gap: clamp(0.6rem, 1.8vh, 1.1rem);
+		padding-top: 0.6rem;
+		padding-bottom: 0.6rem;
+	}
+
+	.design-v2 .scan-foot {
+		gap: 0.3rem;
+	}
+
+	.design-v2 .scan-identity {
+		gap: 0.15rem;
+	}
+}
+
+/* Very short screens: the camera hint is the first thing that can go — the
+   viewfinder brackets already say "point at this". */
+@media (max-height: 680px) {
+	.design-v2 .scan-hint {
+		display: none;
+	}
+
+	.design-v2 .scan-role {
+		font-size: 0.86rem;
+		line-height: 1.4;
+	}
+}
+
+/* The shared footer stacks to three lines on mobile. On the scan screen that
+   is the difference between fitting and not, and there is nothing to read
+   here anyway — lay it out as one compact row. */
+.design-v2.page-scan #copyright {
+	padding: 0.5rem 0;
+	margin-top: 0.35rem;
+}
+
+.design-v2.page-scan #copyright ul {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 0.2rem 0.85rem;
+	margin: 0;
+	padding: 0;
+}
+
+.design-v2.page-scan #copyright ul li {
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	border-left: 0;
+}
+
+/* Legacy #main anchor rules force white text, which disappears on the light
+   theme's pale surfaces. DESIGN.md's QA notes call this out: v2 needs explicit
+   overrides wherever an anchor carries its own text. */
+.design-v2 .detail-quick a {
+	color: var(--text) !important;
+}
+
+.design-v2 .detail-quick a:hover {
+	color: var(--accent) !important;
+}
+
+.design-v2 .scan-url {
+	color: var(--text-subtle) !important;
+}
