@@ -44,6 +44,49 @@
 			return;
 		}
 
+		/* ---- the offline fallback -------------------------------------------
+		   A reader with no connection can never be detected from here: their
+		   phone does not reach this site at all. So the swap is a deliberate tap
+		   by whoever is holding the screen, and the default view is untouched
+		   until it happens. */
+		var toggle = document.querySelector('[data-scan-toggle]');
+		var faces = frame.querySelectorAll('[data-face]');
+		var feet = document.querySelectorAll('[data-foot]');
+		var hint = document.querySelector('[data-scan-hint]');
+
+		if (toggle && faces.length === 2) {
+			var HINTS = {
+				page: 'Point your camera at the code',
+				contact: 'Works without internet'
+			};
+			var LABELS = { page: 'No internet?', contact: 'Back to page code' };
+			var mode = 'page';
+
+			toggle.hidden = false;
+			toggle.setAttribute('aria-live', 'polite');
+
+			function showFace(next) {
+				mode = next;
+				Array.prototype.forEach.call(faces, function (face) {
+					face.hidden = face.getAttribute('data-face') !== next;
+				});
+				Array.prototype.forEach.call(feet, function (foot) {
+					foot.hidden = foot.getAttribute('data-foot') !== next;
+				});
+				if (hint) {
+					hint.textContent = HINTS[next];
+				}
+				toggle.textContent = LABELS[next];
+				frame.classList.toggle('is-fallback', next === 'contact');
+				toggle.classList.toggle('is-back', next === 'contact');
+				play();
+			}
+
+			toggle.addEventListener('click', function () {
+				showFace(mode === 'page' ? 'contact' : 'page');
+			});
+		}
+
 		/* Replaying on tap is the point: when you hand the screen to someone,
 		   the code assembling itself is what makes them look at it. */
 		card.addEventListener('click', play);
