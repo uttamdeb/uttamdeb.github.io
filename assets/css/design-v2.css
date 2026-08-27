@@ -4058,6 +4058,7 @@ body.serenity-lightbox-open {
 	.design-v2.page-scan .share-bar,
 	.design-v2.page-scan .scan-tick,
 	.design-v2.page-scan .scan-sweep,
+	.design-v2.page-scan .scan-fallback,
 	.design-v2.page-scan .scan-hint {
 		display: none !important;
 	}
@@ -4804,4 +4805,94 @@ html.vt-explore::view-transition-new(explore-cue) {
 	.design-v2 .explore-labels > * {
 		transition: none;
 	}
+}
+
+/* ---- The offline fallback code ------------------------------------------
+   /scan-me shows one code. The default is the page link and is exactly what it
+   always was — this section only adds a way out for a reader who says they have
+   no connection, at which point the card swaps to a code that carries the vCard
+   itself and needs no network at all.
+
+   A single URL code cannot serve an offline reader: their phone never reaches
+   the site, so nothing of ours can run to detect it. The payload has to change,
+   which is why this is a deliberate tap rather than something automatic. */
+.design-v2 .qr-face[hidden] {
+	display: none;
+}
+
+.design-v2 .qr-face .qr-svg {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.design-v2 .scan-fallback {
+	appearance: none;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	min-height: 2.75rem;
+	margin-top: -0.35rem;
+	padding: 0 0.65rem;
+	border: 0;
+	border-radius: 999px;
+	background: transparent;
+	color: var(--text-subtle) !important;
+	font-family: var(--font-mono);
+	font-size: 0.66rem;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	cursor: pointer;
+	transition: color 180ms var(--ease-fast);
+}
+
+.design-v2 .scan-fallback::after {
+	content: "→";
+	font-family: var(--font-body);
+	letter-spacing: 0;
+	transition: transform 200ms var(--ease);
+}
+
+.design-v2 .scan-fallback:hover,
+.design-v2 .scan-fallback:focus-visible {
+	color: var(--text) !important;
+}
+
+.design-v2 .scan-fallback:hover::after {
+	transform: translateX(2px);
+}
+
+.design-v2 .scan-fallback:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 3px;
+}
+
+/* In fallback mode the arrow points back the way it came. The state class goes
+   on the button itself: .scan-frame is a sibling of .scan-foot, not an
+   ancestor, so a descendant selector from there never matches. */
+.design-v2 .scan-fallback.is-back::after {
+	content: "↺";
+}
+
+.design-v2 .scan-caption[hidden] {
+	display: none;
+}
+
+.design-v2 #main p.scan-caption {
+	margin: 0;
+	font-family: var(--font-mono);
+	font-size: 0.74rem;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	text-align: center;
+	color: var(--accent-2) !important;
+}
+
+/* A `display` declaration outranks the UA's `[hidden] { display: none }`, so
+   anything here that can be hidden by the attribute needs its own guard. */
+.design-v2 .scan-fallback[hidden],
+.design-v2 .scan-url[hidden],
+.design-v2 #main p.scan-caption[hidden],
+.design-v2 .qr-face[hidden] {
+	display: none !important;
 }
